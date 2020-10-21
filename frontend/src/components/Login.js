@@ -14,6 +14,7 @@ function Login() {
 
   return (
     <div id="loginDiv">
+      <p>THIS IS A TEST OF HEROKU</p>
       <form onSubmit={doLogin}>
         <span id="inner-title">PLEASE LOG IN</span><br />
         <input type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c} />
