@@ -5,7 +5,7 @@ const CardPage = () =>
 
     return(
       <div>
-            <p>THIS IS A CardPage</p>
+            <p>THIS IS A TEST OF HEROKU</p>
       </div>
     );
 };
