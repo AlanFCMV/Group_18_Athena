@@ -20,7 +20,6 @@ app.use('/api', router);
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-
 require('dotenv').config();
 const url = process.env.MONGODB_URI;
 

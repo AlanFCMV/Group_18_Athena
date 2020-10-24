@@ -17,20 +17,29 @@ outgoing:
 router.post('/login', async (req, res, next) => {
     let error = '';
 
-    User.findOne({ $or: [ {Email : req.body.Login}, {Username : req.body.Login} ], Password : req.body.Password }, async (err, user) => {
-        console.log(user);
+    // TODO: Fix case where user1 email = user2 username
+    User.findOne({ $or: [ {Email : req.body.Login}, {Username : req.body.Login} ] }, async (err, user) => {
+
+        // Ensures there was a user instance given the Email or Username?
         if (!user) {
             error = 'Login and Password combination incorrect';
             return res.status(400).json({ error : error });
         }
+        // Ensures the found user has the correct password.
+        let passwordMatch = await user.comparePassword(req.body.Password, this.Password);
+        if (!passwordMatch) {
+            error = 'Login and Password combination incorrect';
+            return res.status(400).json({ error : error });
+        }
+        // Ensures the user is verified.
         if (!user.Verified) {
             error = 'User not verified';
             return res.status(400).json({ error : error });
         }
         
+        // Returns the selected values for use.
         let ret = {
             _id : user._id,
-            Verified : user.Verified,
             Score : user.Score,
             Username : user.Username,
             Email : user.Email,
@@ -46,8 +55,6 @@ router.post('/login', async (req, res, next) => {
     });
     
 });
-
-// TODO: Hash Password
 
 /* Register
 incoming:
