@@ -7,11 +7,11 @@ function Login() {
 
   const [message, setMessage] = useState('');
 
-  /*const doLogin = async event => {
+  const doLogin = async event => {
     event.preventDefault();
 
     alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
-  };*/
+  };
 
   return (
     <div id="loginDiv">
@@ -30,7 +30,7 @@ function Login() {
           <p id="response"></p> {/*error messages for login go here*/}
         </form>
 
-        <a class="signup-login-link" href="Signup.js"></p>    
+        <a class="signup-login-link" href="Signup.js"></a>    
       </div>
     </div>
   );
