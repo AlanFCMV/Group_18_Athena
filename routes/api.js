@@ -1,4 +1,5 @@
 const express = require('express');
+const validator = require('validator');
 const router = express.Router();
 const User = require('../models/user');
 
@@ -17,7 +18,6 @@ outgoing:
 router.post('/login', async (req, res, next) => {
     let error = '';
 
-    // TODO: Fix case where user1 email = user2 username
     User.findOne({ $or: [ {Email : req.body.Login}, {Username : req.body.Login} ] }, async (err, user) => {
 
         // Ensures there was a user instance given the Email or Username?
@@ -70,6 +70,16 @@ outgoing:
 */
 router.post('/register', async (req, res, next) => {
     let error = '';
+
+    // Make sure the email is an email.
+    if (!validator.isEmail(req.body.Email)) {
+        error = 'Invalid Email Address';
+        return res.status(400).json({ error: error });
+    }
+    else if (validator.isEmail(req.body.Username)) {
+        error = 'Invalid Username';
+        return res.status(400).json({ error: error });
+    }
 
     User.findOne({ Email : req.body.Email }, async (err, user) => {
         if (user) {

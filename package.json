@@ -17,6 +17,7 @@
         "express": "^4.17.1",
         "moment-timezone": "^0.5.31",
         "mongodb": "^3.6.2",
-        "mongoose": "^5.10.10"
+        "mongoose": "^5.10.10",
+        "validator": "^13.1.17"
     }
 }
