@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 // Schema for the Users
 const UserSchema = new Schema({
+    // True when user verifies email.
     Verified: {
         type: Boolean,
         default: false
@@ -48,6 +49,11 @@ const UserSchema = new Schema({
         type: [Schema.Types.ObjectId],
         default: []
     },
+    // List of people following the user
+    CreatedAt: {
+        type: Date,
+        default: Date.now
+    }    
 });
 
 const User = mongoose.model('user', UserSchema);
