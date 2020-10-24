@@ -1,0 +1,22 @@
+body
+{
+    background-color: white;
+    color: black;
+}
+
+.titleA
+{
+    font-family: AthenaA;
+}
+
+.titleThena
+{
+    font-family: "Copperplate Gothic Bold";
+}
+
+/* Add custom font for "A" in title*/
+@font-face
+{
+    font-family: AthenaA;
+    src: url(../fonts/Athenaa-Regular.ttf);
+}
