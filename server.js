@@ -18,12 +18,13 @@ app.use('/api', router);
 
 // Connect to mongodb through mongoose
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
 
 require('dotenv').config();
 const url = process.env.MONGODB_URI;
 
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
-mongoose.Promise = global.Promise;
+mongoose.connect(url, {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true});
 
 // Do stuff
 app.use((req, res, next) => 
