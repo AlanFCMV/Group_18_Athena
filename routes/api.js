@@ -126,7 +126,7 @@ router.post('/register', async (req, res, next) => {
                         from: 'Athena <no-reply@athena18.herokuapp.com>',
                         to: req.body.Email,
                         subject: 'Account Verification Token',
-                        text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/api\/confirmation\/' + token.token + '.\n'
+                        text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
                     };
 
                     transporter.sendMail(mailOptions, function (error, info) {
@@ -146,9 +146,15 @@ router.post('/register', async (req, res, next) => {
 });
 
 // Email Confirmation
-router.get('/confirmation/:id', async (req, res, next) => {
+/*
+    Incoming:
+    {
+        TokenId : You know what this is
+    }
+*/
+router.post('/confirmation', async (req, res, next) => {
     // Find a matching token
-    Token.findOne({ token: req.params.id }, function (err, token) {
+    Token.findOne({ token: req.body.TokenId }, function (err, token) {
         if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
 
         // If we found a token, find a matching user
@@ -199,7 +205,7 @@ router.post('/resend', async (req, res, next) => {
             let mailOptions = {
                 from: 'Athena <no-reply@athena18.herokuapp.com>',
                 to: user.Email, subject: 'Account Verification Token',
-                text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/api\/confirmation\/' + token.token + '.\n'
+                text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
             };
 
             transporter.sendMail(mailOptions, function (err) {
