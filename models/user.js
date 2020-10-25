@@ -56,7 +56,7 @@ const UserSchema = new Schema({
     // List of people following the user
     CreatedAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     }
 });
 

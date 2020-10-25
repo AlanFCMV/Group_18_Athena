@@ -18,6 +18,7 @@
         "moment-timezone": "^0.5.31",
         "mongodb": "^3.6.2",
         "mongoose": "^5.10.10",
+        "nodemailer": "^6.4.14",
         "validator": "^13.1.17"
     }
 }
