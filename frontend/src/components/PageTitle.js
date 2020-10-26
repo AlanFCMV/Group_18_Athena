@@ -3,8 +3,10 @@ import React from 'react';
 function PageTitle()
 {
    return(
-     <h1 id="title">Athena</h1>
+        <div>
+            <img class="title-image" src={require("../img/AthenaTextLogo.png")}/>
+        </div>
    );
-};
+};  
 
 export default PageTitle;

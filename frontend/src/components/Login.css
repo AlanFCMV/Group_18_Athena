@@ -1,17 +1,87 @@
 body
 {
-    background-color: white;
-    color: black;
+    background-color: rgb(28,28,28);
+    color: white;
 }
 
-.titleA
-{
-    font-family: AthenaA;
+.title-image
+{   
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
 
-.titleThena
+.box1
 {
-    font-family: "Copperplate Gothic Bold";
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+    height: 300px;
+    
+}
+
+.usernameBox
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 210px;
+    text-align: center;
+}
+
+#loginName
+{
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+#loginPassword
+{
+    width: 170px;
+    margin-right: 12px;
+    margin-bottom: 10px;
+}
+
+.passwordBox
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 210px;
+    text-align: center;
+}
+
+.rememberMe
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    width: 140px;
+    font-size: 14px;
+    text-align: center;
+}
+
+#loginButton
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.signup-login-link
+{
+    color: white;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -10px;
+    font-size: 12px;
+    width: 150px;
+    text-align: center;
+
 }
 
 /* Add custom font for "A" in title*/
