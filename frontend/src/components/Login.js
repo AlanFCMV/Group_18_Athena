@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './Login.css';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useTogglePassword from "../hooks/useTogglePassword";
 
 
@@ -23,7 +22,9 @@ function Login() {
 
   const doLogin = async event => {
     event.preventDefault();
-   /* var obj = {login:loginName.value, password:loginPassword.value};
+
+    // trying to figure out how to connect react to express/node.js
+    /* var obj = {login:loginName.value, password:loginPassword.value};
     var js = JSON.stringify(obj);
 
     try{
@@ -37,7 +38,8 @@ function Login() {
       }
       else
       {
-        var user = {}
+        var user = {Username:res.Username, Email:res.Email, id:res.id};
+        localStorage.setItem('user_data', )
       }
     }*/
 
@@ -49,24 +51,39 @@ function Login() {
 
   return (
     <div id="loginDiv">
-      <div class="box1">
-        <form onSubmit={doLogin}>
-          <div class="usernameBox">
-            <input type="text" id="loginName" placeholder="Email or Username" ref={(c) => loginName = c} />
-          </div>
-          <div class="passwordBox">
-            <input type={PasswordInputType} id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c} />{ToggleIcon}
-          </div>
-          <div class="rememberMe">
-           <input type="checkbox" id="remember"/>Remember Me
-          </div>
-          <div>
-            <input type="submit" id="loginButton" class="buttons" value="Log In" onClick={doLogin} />
-          </div>
-          <p id="response"></p> {/*error messages for login go here*/}
-        </form>
 
-        <a class="signup-login-link" href="Signup.js">Click Here To Sign Up</a>    
+      {/* Login Box */}
+      <div class="modal-dialog text-center">
+        <div class="col-md-8 login-box">
+          <div class="modal-content">
+            <form class="col-12" onSubmit={doLogin}>
+              
+              <div class="form-group usernameBox">
+                <input type="text" id="loginName" class="form-control" placeholder="Username or Email" ref={(c) => loginName = c} />
+              </div>
+
+              <div class="form-group passwordBox">
+                <input type={PasswordInputType} id="loginPassword" class="form-control" placeholder="Password" ref={(c) => loginPassword = c} />
+                <span class="password-icon">{ToggleIcon}</span>
+              </div>
+
+              <div class="checkbox-class">
+                  <input type="checkbox" id="remember" /> Remember Me
+              </div>
+              
+
+              <button class="btn" id="login" type="button" onClick={doLogin}><i class="fa fa-sign-in-alt"></i> Log In </button>
+
+            </form>
+
+              <a class="signup-login-link links" href="Signup.js">Create Account</a> 
+
+              <a class="forgot-password-link links" href="ForgotPassword.js">Forgot Password?</a> 
+              
+              <p id="response"></p> {/*error messages for login go here*/}
+
+          </div>
+        </div>
       </div>
     </div>
   );
