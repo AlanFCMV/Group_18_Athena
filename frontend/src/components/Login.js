@@ -5,7 +5,7 @@ import SiteInfo from '../components/SiteInfo';
 import SiteImages from '../components/SiteImages';
 
 function Login() {
-/*
+
   const appName = 'athena18'
   function buildPath(route){
     if(ProcessingInstruction.env.NODE_ENV ==='production'){
@@ -14,10 +14,11 @@ function Login() {
     else{
       return 'http://localhost:5000/' + route;
     }
-  }*/
+  }
 
-  var loginName;
-  var loginPassword;
+  var userName;
+  var userEmail;
+  var userPassword;
 
   const [message, setMessage] = useState('');
 
@@ -25,7 +26,7 @@ function Login() {
     event.preventDefault();
 
     // trying to figure out how to connect react to express/node.js
-    /* var obj = {login:loginName.value, password:loginPassword.value};
+     var obj = {Username:userName.value || Email:userEmail.value, Password:userPassword.value};
     var js = JSON.stringify(obj);
 
     try{
@@ -40,11 +41,18 @@ function Login() {
       else
       {
         var user = {Username:res.Username, Email:res.Email, id:res.id};
-        localStorage.setItem('user_data', )
+        localStorage.setItem('user_data', JSON.stringify(user));
+        setMessage('');
+        window.location.href = '../pages/LandingPage;
       }
-    }*/
+    }
+    catch(e)
+    {
+      alert(e.toString());
+      return;
+    }  
 
-    alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
+    //alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
   };
 
   // Password Visablility Toggling
