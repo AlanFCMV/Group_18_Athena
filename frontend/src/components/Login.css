@@ -82,10 +82,3 @@
     right: -40%;
     cursor: pointer;
 }
-
-/* Add custom font for "A" in title*/
-@font-face
-{
-    font-family: AthenaA;
-    src: url(../fonts/Athenaa-Regular.ttf);
-}

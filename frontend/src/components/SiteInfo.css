@@ -1,0 +1,49 @@
+.outer-box
+{
+    background:  rgb(247, 155, 1);
+    position: absolute;
+    width: 110%;
+    height: 100%;
+    left: -133%;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.inner-box
+{
+    height: 97%;
+    margin: 5px;
+    background: rgb(30, 30, 30);
+    border-radius: 5px;
+}
+
+.info
+{
+    padding: 7px;
+    text-align: left;
+}
+
+.afont
+{
+    font-family: AthenaA;
+}
+
+.copperfont
+{
+    font-family: "Copperplate Gothic";
+}
+
+@media (max-width: 1444px) 
+{
+    .outer-box
+    {
+        display: none;
+    }
+}
+
+/* Add custom font for "A" in title*/
+@font-face
+{
+    font-family: AthenaA;
+    src: url(../fonts/Athenaa-Regular.ttf);
+}

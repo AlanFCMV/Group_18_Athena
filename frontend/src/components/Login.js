@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Login.css';
 import useTogglePassword from "../hooks/useTogglePassword";
-
+import SiteInfo from '../components/SiteInfo';
+import SiteImages from '../components/SiteImages';
 
 function Login() {
 /*
@@ -53,7 +54,8 @@ function Login() {
     <div id="loginDiv">
 
       {/* Login Box */}
-      <div class="modal-dialog text-center">
+      <div class="modal-dialog text-center row">
+        <SiteInfo />
         <div class="col-md-8 login-box">
           <div class="modal-content">
             <form class="col-12" onSubmit={doLogin}>
@@ -84,6 +86,7 @@ function Login() {
 
           </div>
         </div>
+        <SiteImages />
       </div>
     </div>
   );
