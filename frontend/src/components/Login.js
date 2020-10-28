@@ -5,7 +5,7 @@ import SiteInfo from '../components/SiteInfo';
 import SiteImages from '../components/SiteImages';
 
 function Login() {
-
+/*
   const appName = 'athena18'
   function buildPath(route){
     if(ProcessingInstruction.env.NODE_ENV ==='production'){
@@ -14,7 +14,7 @@ function Login() {
     else{
       return 'http://localhost:5000/' + route;
     }
-  }
+  }*/
 
   var userName;
   var userEmail;
@@ -26,7 +26,7 @@ function Login() {
     event.preventDefault();
 
     // trying to figure out how to connect react to express/node.js
-     var obj = {Username:userName.value || Email:userEmail.value, Password:userPassword.value};
+    /* var obj = {Username:userName.value || Email:userEmail.value, Password:userPassword.value};
     var js = JSON.stringify(obj);
 
     try{
@@ -50,9 +50,9 @@ function Login() {
     {
       alert(e.toString());
       return;
-    }  
+    }  */
 
-    //alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
+    alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
   };
 
   // Password Visablility Toggling
