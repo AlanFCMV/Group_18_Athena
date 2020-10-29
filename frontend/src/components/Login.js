@@ -52,7 +52,7 @@ function Login() {
       return;
     }  
 
-    alert('doIt() ' + userName.value + ' ' + userPassword.value);
+    //alert('doIt() ' + userName.value + ' ' + userPassword.value);
   };
 
   // Password Visablility Toggling
