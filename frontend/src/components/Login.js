@@ -5,7 +5,7 @@ import SiteInfo from '../components/SiteInfo';
 import SiteImages from '../components/SiteImages';
 
 function Login() {
-/*
+
   const appName = 'athena18'
   function buildPath(route){
     if(ProcessingInstruction.env.NODE_ENV ==='production'){
@@ -14,11 +14,10 @@ function Login() {
     else{
       return 'http://localhost:5000/' + route;
     }
-  }*/
+  }
 
-  var userName;
-  var userEmail;
-  var userPassword;
+  var loginName;
+  var loginPassword;
 
   const [message, setMessage] = useState('');
 
@@ -26,7 +25,7 @@ function Login() {
     event.preventDefault();
 
     // trying to figure out how to connect react to express/node.js
-    var obj = {Username:userName.value, Email:userEmail.value, Password:userPassword.value};
+    var obj = {Username:loginName.value, Email:loginName.value, Password:loginPassword.value};
     var js = JSON.stringify(obj);
 
     try{
