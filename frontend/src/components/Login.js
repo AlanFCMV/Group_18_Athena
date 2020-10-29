@@ -51,7 +51,7 @@ function Login() {
       return;
     }  */
 
-    alert('doIt() ' + userName.value + ' ' + userPassword.value);
+    alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
   };
 
   // Password Visablility Toggling
