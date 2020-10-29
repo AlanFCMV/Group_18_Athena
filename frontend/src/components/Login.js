@@ -26,11 +26,11 @@ function Login() {
     event.preventDefault();
 
     // trying to figure out how to connect react to express/node.js
-    /* var obj = {Username:userName.value || Email:userEmail.value, Password:userPassword.value};
+    var obj = {Username:userName.value, Email:userEmail.value, Password:userPassword.value};
     var js = JSON.stringify(obj);
 
     try{
-      const response = await fetch(buildPath('api/login'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+      const response = await fetch(buildPath('./routes/api'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
       
       var res = JSON.parse(await response.text());
 
@@ -43,16 +43,16 @@ function Login() {
         var user = {Username:res.Username, Email:res.Email, id:res.id};
         localStorage.setItem('user_data', JSON.stringify(user));
         setMessage('');
-        window.location.href = '../pages/LandingPage;
+        window.location.href = '../pages/LandingPage';
       }
     }
     catch(e)
     {
       alert(e.toString());
       return;
-    }  */
+    }  
 
-    alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
+    alert('doIt() ' + userName.value + ' ' + userPassword.value);
   };
 
   // Password Visablility Toggling
