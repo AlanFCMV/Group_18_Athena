@@ -366,8 +366,68 @@ router.post('/unlike', async (req, res, next) => {
 });
 
 // Follow person
+/*
+    Incoming:
+    {
+        UserId: ObjectId,   --This is the user being followed
+        FollowerId: ObjectId    --This is the user
+    }
+    Process of updating follow: user, follower
+*/
+router.post('/follow', async (req, res, next) => {
+    let error = '';
+
+    User.findById(req.body.UserId, async (err, user) => {
+        if (!user) {
+            error = 'Followed User not found';
+            return res.status(400).json({ error: error });
+        }
+        User.findById(req.body.FollowerId, async (err, follower) => {
+            if (!follower) {
+                error = 'Follower User not found';
+                return res.status(400).json({ error: error });
+            }
+            user.Followers.push(req.body.FollowerId);
+            await user.save();
+            follower.Following.push(req.body.UserId);
+            await follower.save()
+
+            return res.status(200).json({ error: error });
+        });
+    });
+});
 
 // Unfollow person
+/*
+    Incoming:
+    {
+        UserId: ObjectId,   --This is the user being unfollowed
+        FollowerId: ObjectId    --This is the user unfollowing
+    }
+    Process of updating unfollow: user, unfollower
+*/
+router.post('/unfollow', async (req, res, next) => {
+    let error = '';
+
+    User.findById(req.body.UserId, async (err, user) => {
+        if (!user) {
+            error = 'Followed User not found';
+            return res.status(400).json({ error: error });
+        }
+        User.findById(req.body.FollowerId, async (err, follower) => {
+            if (!follower) {
+                error = 'Follower User not found';
+                return res.status(400).json({ error: error });
+            }
+            user.Followers.splice(user.Followers.indexOf(req.body.FollowerId), 1);
+            await user.save();
+            follower.Following.splice(follower.Following.indexOf(req.body.UserId), 1);
+            await follower.save()
+
+            return res.status(200).json({ error: error });
+        });
+    });
+});
 
 // Search cardset
 
