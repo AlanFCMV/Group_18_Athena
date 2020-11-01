@@ -3,8 +3,11 @@ const validator = require('validator');
 const router = express.Router();
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+
+// Import Schemas
 const User = require('../models/user');
 const Token = require('../models/token');
+const CardSet = require('../models/cardset');
 
 require('dotenv').config();
 const gmail = process.env.GMAIL;
@@ -216,6 +219,32 @@ router.post('/resend', async (req, res, next) => {
             });
         });
     });
+});
+
+// Adds to set of cards
+/*
+    Incoming:
+    {
+        Creator: ObjectId,
+        Name: String,
+        Cards: [{
+            Question: String,
+            Answer: String
+        }]
+    }
+*/
+router.post('/addset', async (req, res, next) => {
+    let error = '';
+
+    User.findById(req.body.Creator, async (err, user) => {
+        if (!user) {
+            error = 'User not found';
+            return res.status(400).json({ error: error });
+        }
+
+        CardSet.create(req.body);
+        return res.status(200).json({ error: error });
+    }); 
 });
 
 module.exports = router;
