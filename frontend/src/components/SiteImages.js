@@ -9,7 +9,7 @@ function SiteImages()
                 <div class="modal-content">
 
                     {/* Carousel*/}
-                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel slide" id="myCarousel" data-ride="carousel">
 
                         {/* Slide Indicators*/}
                         <ol class="carousel-indicators">
@@ -21,31 +21,29 @@ function SiteImages()
 
                         {/* Slides */}
                         <div class="carousel-inner">
-                            <div class="item active">
-                                <img src="../img/image1.png" alt="One" />
+                            <div class="carousel-item active">
+                                <img class="d-block img-fluid" src={require("../img/image1.png")} />
                             </div>
 
-                            <div class="item">
-                                <img src="../img/image2.png" alt="Two" />
+                            <div class="carousel-item">
+                                <img class="d-block img-fluid" src={require("../img/image2.png")} />
                             </div>
 
-                            <div class="item">
-                                <img src="../img/image3.png" alt="Three" />
+                            <div class="carousel-item">
+                                <img class="d-block img-fluid" src={require("../img/image3.png")} />
                             </div>
 
-                            <div class="item">
-                                <img src="../img/image4.png" alt="Four" />
+                            <div class="carousel-item">
+                                <img class="d-block img-fluid" src={require("../img/image4.png")} />
                             </div>
                         </div>
 
                         {/* Left and Right Arrows*/}
-                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left"></span>
-                            <span class="sr-only">Previous</span>
+                        <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
                         </a>
-                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right"></span>
-                            <span class="sr-only">Next</span>
+                        <a class="carousel-control-next" href="#myCarousel" data-slide="next">
+                            <span class="carousel-control-next-icon"></span>
                         </a>
 
                     </div>

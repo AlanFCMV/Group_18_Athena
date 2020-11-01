@@ -3,3 +3,19 @@ body
     background-color: rgb(30,30,30) !important;
     color: white !important;
 }
+
+.right
+{
+    padding-top: 5%;
+    overflow: hidden;
+}
+
+.top-left
+{
+    height: 50%;
+}
+
+.bottom-left
+{
+    height: 50%;
+}

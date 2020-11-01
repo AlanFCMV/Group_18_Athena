@@ -1,27 +1,45 @@
 .outer-box2
 {
-    background:  rgb(247, 155, 1);
     position: absolute;
-    width: 110%;
-    height: 100%;
-    right: -133%;
-    border-radius: 5px;
+    top: 5px;
+    left: 5px;
+    width: 99%;
+    height: 49%;
     font-size: 18px;
 }
 
 .inner-box2
 {
-    height: 97%;
-    margin: 5px;
-    background: rgb(30, 30, 30);
+    height: 100%;
+    width: 99%;
+    margin: 4px;
     border-radius: 5px;
+    border: 1px solid rgb(247,155,1);
+    overflow: hidden;
 }
 
-.info
+.img1
 {
-    padding: 7px;
-    text-align: left;
+    background: url(../img/image1.png) !important;
+    height: 100px;
 }
+
+.carousel-item img
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.carousel-inner>.item>img, .carousel-inner>.item>a>img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    margin: auto;
+    width: 100%;
+    }
+
+
 
 .afont
 {
@@ -33,13 +51,14 @@
     font-family: "Copperplate Gothic";
 }
 
-@media (max-width: 1444px) 
+
+/*@media (max-width: 1444px) 
 {
     .outer-box2
     {
         display: none;
     }
-}
+}*/
 
 /* Add custom font for "A" in title*/
 @font-face
