@@ -333,11 +333,37 @@ router.post('/like', async (req, res, next) => {
 /*
     Incoming:
     {
-        UserId: ObjectId,   --This is the user liking the cardset
-        SetId: ObjectId    --This is the cardset the user liked
+        UserId: ObjectId,   --This is the user unliking the cardset
+        SetId: ObjectId    --This is the cardset the user unliked
     }
-    Process of updating like: user, cardset, other user
+    Process of updating unlike: user, cardset, other user
 */
+router.post('/unlike', async (req, res, next) => {
+    let error = '';
+
+    User.findById(req.body.UserId, async (err, user) => {
+        if (!user) {
+            error = 'User not found';
+            return res.status(400).json({ error: error });
+        }
+        CardSet.findById(req.body.SetId, async (err, cardset) => {
+            if (!cardset) {
+                error = 'CardSet not found';
+                return res.status(400).json({ error: error });
+            }
+            User.findById(cardset.Creator, async (err, creator) => {
+                user.LikedCardSets.splice(user.LikedCardSets.indexOf(req.body.SetId), 1);
+                await user.save();
+                cardset.LikedBy.splice(cardset.LikedBy.indexOf(req.body.UserId), 1);
+                await cardset.save()
+                creator.Score--;
+                await creator.save();
+
+                return res.status(200).json({ error: error });
+            });
+        });
+    });
+});
 
 // Follow person
 
