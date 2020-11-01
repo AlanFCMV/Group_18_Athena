@@ -294,8 +294,50 @@ router.post('/deleteset', async (req, res, next) => {
 });
 
 // Like cardset
+/*
+    Incoming:
+    {
+        UserId: ObjectId,   --This is the user liking the cardset
+        SetId: ObjectId    --This is the cardset the user liked
+    }
+    Process of updating like: user, cardset, other user
+*/
+router.post('/like', async (req, res, next) => {
+    let error = '';
+
+    User.findById(req.body.UserId, async (err, user) => {
+        if (!user) {
+            error = 'User not found';
+            return res.status(400).json({ error: error });
+        }
+        CardSet.findById(req.body.SetId, async (err, cardset) => {
+            if (!cardset) {
+                error = 'CardSet not found';
+                return res.status(400).json({ error: error });
+            }
+            User.findById(cardset.Creator, async (err, creator) => {
+                user.LikedCardSets.push(req.body.SetId);
+                await user.save();
+                cardset.LikedBy.push(req.body.UserId);
+                await cardset.save()
+                creator.Score++;
+                await creator.save();
+
+                return res.status(200).json({ error: error });
+            });
+        });
+    });
+});
 
 // Unlike cardset
+/*
+    Incoming:
+    {
+        UserId: ObjectId,   --This is the user liking the cardset
+        SetId: ObjectId    --This is the cardset the user liked
+    }
+    Process of updating like: user, cardset, other user
+*/
 
 // Follow person
 
