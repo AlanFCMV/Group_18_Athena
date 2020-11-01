@@ -227,6 +227,7 @@ router.post('/resend', async (req, res, next) => {
     {
         Creator: ObjectId,
         Name: String,
+        Public: Boolean,
         Cards: [{
             Question: String,
             Answer: String
@@ -246,5 +247,60 @@ router.post('/addset', async (req, res, next) => {
         return res.status(200).json({ error: error });
     }); 
 });
+
+// Edits the set of cards
+/*
+    Incoming:
+    {
+        _id: ObjectId,
+        Name: String,
+        Public: Boolean,
+        Cards: [{
+            _id: ObjectId,
+            Question: String,
+            Answer: String
+        }]
+    }
+*/
+router.post('/editset', async (req, res, next) => {
+    let error = '';
+
+    CardSet.findOneAndUpdate({_id: req.body._id}, {Name: req.body.Name, Public: req.body.Public, Cards: req.body.Cards}, {useFindAndModify: false}, async (err, cardset) => {
+        if (!cardset) {
+            error = 'Cardset not found';
+            return res.status(400).json({ error: error });
+        }
+        return res.status(200).json({ error: error });
+    });
+});
+
+// Delete cardset
+/*
+    Incoming:
+    {
+        _id: ObjectId,
+    }
+*/
+router.post('/deleteset', async (req, res, next) => {
+    let error = '';
+
+    CardSet.findOneAndRemove({_id: req.body._id}, {useFindAndModify: false}, async (err, cardset) => {
+        if (!cardset) {
+            error = 'Cardset not found';
+            return res.status(400).json({ error: error });
+        }
+        return res.status(200).json({ error: error });
+    });
+});
+
+// Like cardset
+
+// Unlike cardset
+
+// Follow person
+
+// Unfollow person
+
+// Search cardset
 
 module.exports = router;
