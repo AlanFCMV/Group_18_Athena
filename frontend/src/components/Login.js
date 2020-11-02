@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
 import useTogglePassword from "../hooks/useTogglePassword";
-import SiteInfo from '../components/SiteInfo';
-import SiteImages from '../components/SiteImages';
 
 function Login() {
 /*
@@ -19,7 +17,7 @@ function Login() {
   var loginName;
   var loginPassword;
 
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
 
   const doLogin = async event => {
     event.preventDefault();
@@ -84,9 +82,9 @@ function Login() {
 
             </form>
 
-              <a class="signup-login-link links" href="/Signup">Create Account</a> 
+              <a class="signup-login-link links" href="./Signup">Create Account</a> 
 
-              <a class="forgot-password-link links" href="ForgotPassword.js">Forgot Password?</a> 
+              <a class="forgot-password-link links" href="./ForgotPassword">Forgot Password?</a> 
               
               <p id="response"></p> {/*error messages for login go here*/}
 

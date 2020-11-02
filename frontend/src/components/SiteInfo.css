@@ -14,8 +14,9 @@
     width: 99%;
     margin: 4px;
     border-radius: 5px;
-    border: 1px solid rgb(247,155,1);
-    overflow: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .info
@@ -24,6 +25,10 @@
     text-align: left;
     line-height: 150%;
 }
+
+.inner-box::-webkit-scrollbar {
+    display: none;
+  }
 
 .afont
 {

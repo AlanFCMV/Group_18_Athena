@@ -1,56 +1,24 @@
-import React from 'react';
-import './SiteImages.css';
+import React from "react";
+import Carousel from "react-elastic-carousel";
+import Item from "./Item";
+import "./SiteImages.css";
 
-function SiteImages()
-{
-    return (
-        <div class="outer-box2">
-            <div class="inner-box2">
-                <div class="modal-content">
+import image1 from "../img/image1.png";
+import image2 from "../img/image2.png";
+import image3 from "../img/image3.png";
+import image4 from "../img/image4.png";
 
-                    {/* Carousel*/}
-                    <div class="carousel slide" id="myCarousel" data-ride="carousel">
 
-                        {/* Slide Indicators*/}
-                        <ol class="carousel-indicators">
-                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                            <li data-target="#myCarousel" data-slide-to="1"></li>
-                            <li data-target="#myCarousel" data-slide-to="2"></li>
-                            <li data-target="#myCarousel" data-slide-to="3"></li>
-                        </ol>
 
-                        {/* Slides */}
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img class="d-block img-fluid" src={require("../img/image1.png")} />
-                            </div>
-
-                            <div class="carousel-item">
-                                <img class="d-block img-fluid" src={require("../img/image2.png")} />
-                            </div>
-
-                            <div class="carousel-item">
-                                <img class="d-block img-fluid" src={require("../img/image3.png")} />
-                            </div>
-
-                            <div class="carousel-item">
-                                <img class="d-block img-fluid" src={require("../img/image4.png")} />
-                            </div>
-                        </div>
-
-                        {/* Left and Right Arrows*/}
-                        <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </a>
-                        <a class="carousel-control-next" href="#myCarousel" data-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+function SiteImages() {
+  return (
+      <Carousel className="SiteImages">
+        <Item><img className="d-block w-100" alt="1" src={image1}/></Item>
+        <Item><img className="d-block w-100" alt="2" src={image2}/></Item>
+        <Item><img className="d-block w-100" alt="3" src={image3}/></Item>
+        <Item><img className="d-block w-100" alt="4" src={image4}/></Item>
+      </Carousel>
+  );
 };
 
 export default SiteImages;

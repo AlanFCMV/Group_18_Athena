@@ -13,14 +13,17 @@ body
 .top-left
 {
     height: 50%;
+    border: 1px solid rgba(0,0,0,0);
+    border-radius: 20px;
+    box-shadow: inset 0px 0px 0px 5px rgb(247,155,1);
+    box-sizing: border-box;
 }
 
 .bottom-left
 {
     height: 50%;
-}
-
-.login-box
-{
-    margin: 0 auto;
+    border: 1px solid rgba(0,0,0,0);
+    border-radius: 20px;
+    box-shadow: inset 0px 0px 0px 5px rgb(247,155,1);
+    box-sizing: border-box;
 }

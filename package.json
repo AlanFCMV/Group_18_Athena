@@ -20,6 +20,8 @@
         "mongodb": "^3.6.2",
         "mongoose": "^5.10.10",
         "nodemailer": "^6.4.14",
+        "react-elastic-carousel": "^0.9.3",
+        "styled-components": "^5.2.1",
         "validator": "^13.1.17"
     }
 }
