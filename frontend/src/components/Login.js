@@ -84,7 +84,7 @@ function Login() {
 
             </form>
 
-              <a class="signup-login-link links" href="Signup.js">Create Account</a> 
+              <a class="signup-login-link links" href="/Signup">Create Account</a> 
 
               <a class="forgot-password-link links" href="ForgotPassword.js">Forgot Password?</a> 
               

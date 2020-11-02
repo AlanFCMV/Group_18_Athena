@@ -78,7 +78,25 @@
 {
     font-size: 22px;
     position: absolute;
-    top: 27%;
+    top: 29%;
+    right: -40%;
+    cursor: pointer;
+}
+
+.password-iconSignup
+{
+    font-size: 22px;
+    position: absolute;
+    top: 40%;
+    right: -40%;
+    cursor: pointer;
+}
+
+.password-iconConfirmSignup
+{
+    font-size: 22px;
+    position: absolute;
+    top: 59%;
     right: -40%;
     cursor: pointer;
 }

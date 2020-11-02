@@ -6,6 +6,9 @@ import * as serviceWorker from './serviceWorker';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import Login from './components/Login';
+import Signup from './components/Signup';
 
 library.add(faEye, faEyeSlash);
 
@@ -15,6 +18,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -19,3 +19,8 @@ body
 {
     height: 50%;
 }
+
+.login-box
+{
+    margin: 0 auto;
+}
