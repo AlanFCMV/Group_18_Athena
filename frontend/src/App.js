@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Route, Redirect, Switch, BrowserRouter, Link }
 import './App.css';
 
 import LoginPage from './pages/LoginPage';
-import CardPage from './pages/CardPage';
-import Login from './components/Login';
 import SignupPage from './pages/SignupPage';
 import Navigation from './components/Navigation';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ConfirmEmailPage from './pages/ConfirmEmailPage';
+import ConfirmationPage from './pages/ConfirmationPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 function App() {
   return (
@@ -18,8 +20,17 @@ function App() {
         <Route path ="/Signup" exact>
           <SignupPage />
         </Route>
-        <Route path="/cards" exact>
-          <CardPage />
+        <Route path="/ForgotPassword" exact>
+          <ForgotPasswordPage />
+        </Route>
+        <Route path="/ConfirmEmail" exact>
+          <ConfirmEmailPage />
+        </Route>
+        <Route path="/confirmation" exact>
+          <ConfirmationPage />
+        </Route>
+        <Route path="/ResetPassword" exact>
+          <ResetPasswordPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

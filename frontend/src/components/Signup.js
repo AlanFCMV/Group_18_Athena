@@ -40,15 +40,16 @@ function Signup()
                             </div>
 
                             <div class="form-group confirmPasswordBox">
-                                <input type={ConfirmPasswordType} id="confirmPassword" class="form-control" placeholder=" Confirm Password" ref={(c) => newPassword = c} />
+                                <input type={ConfirmPasswordType} id="confirmPassword" class="form-control" placeholder=" Confirm Password" ref={(c) => samePassword = c} />
                                 <span class="password-iconConfirmSignup">{secondToggleIcon}</span>
                             </div>
 
-                            <button class="btn" id="signup" type="button" onClick={doSignup}><i class="fa fa-sign-in-alt"></i> Sign up </button>
+                            {/* <button class="btn" id="signup" type="button" onClick={doSignup}><i class="fa fa-sign-in-alt"></i> Sign up </button> */}
+                            <a class="btn" id="signup" type="button" href="./ConfirmEmail"><i class="fa fa-sign-in-alt"></i> Sign up </a>
                 
                         </form>
 
-                        <a class="login-signup-link links" href="/Login">Log in</a>
+                        <a class="login-signup-link links" href="./Login">Log in</a>
                     </div>
                 </div>
             </div>
