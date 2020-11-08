@@ -243,7 +243,10 @@ router.post('/addset', async (req, res, next) => {
             return res.status(400).json({ error: error });
         }
 
-        CardSet.create(req.body);
+        let newSet = await CardSet.create(req.body);
+        user.CreatedCardSets.push(newSet._id);
+        await user.save();
+
         return res.status(200).json({ error: error });
     }); 
 });
@@ -289,7 +292,19 @@ router.post('/deleteset', async (req, res, next) => {
             error = 'Cardset not found';
             return res.status(400).json({ error: error });
         }
-        return res.status(200).json({ error: error });
+
+        User.findById(cardset.Creator, async (err, user) => {
+            if (!user) {
+                error = 'User not found';
+                return res.status(400).json({ error: error });
+            }
+
+            user.CreatedCardSets.splice(user.CreatedCardSets.indexOf(req.body._id), 1);
+            user.Score -= cardset.LikedBy.length;
+            await user.save();
+
+            return res.status(200).json({ error: error });
+        });
     });
 });
 
