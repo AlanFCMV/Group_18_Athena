@@ -128,7 +128,7 @@ router.post('/register', async (req, res, next) => {
                     let mailOptions = {
                         from: 'Athena <no-reply@athena18.herokuapp.com>',
                         to: req.body.Email,
-                        subject: 'Account Verification Token',
+                        subject: 'Account Verification',
                         text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
                     };
 
@@ -207,7 +207,7 @@ router.post('/resend', async (req, res, next) => {
 
             let mailOptions = {
                 from: 'Athena <no-reply@athena18.herokuapp.com>',
-                to: user.Email, subject: 'Account Verification Token',
+                to: user.Email, subject: 'Account Verification',
                 text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
             };
 
@@ -216,6 +216,80 @@ router.post('/resend', async (req, res, next) => {
                     return res.status(500).send({ msg: err.message });
                 }
                 res.status(200).send('A verification email has been sent to ' + user.email + '.');
+            });
+        });
+    });
+});
+
+
+// Creates a token + sends out email for password reset
+/*
+    Incoming
+    {
+        Email : String
+    }
+*/
+router.post('/reset', async (req, res, next) => {
+    User.findOne({ Email: req.body.Email }, function (err, user) {
+        if (!user) return res.status(400).send({ msg: 'We were unable to find a user with that email.' });
+        // if (user.Verified) return res.status(400).send({ msg: 'This account has already been verified. Please log in.' });
+
+        // Create a verification token, save it, and send email
+        let token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+
+        // Save the token
+        token.save(function (err) {
+            if (err) {
+                return res.status(500).send({ msg: err.message });
+            }
+
+            // Send the email
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: gmail,
+                    pass: gpass
+                }
+            });
+
+            let mailOptions = {
+                from: 'Athena <no-reply@athena18.herokuapp.com>',
+                to: user.Email, subject: 'Password Reset',
+                text: 'Hello,\n\n' + 'Please reset your password by clicking the link: \nhttp:\/\/' + req.headers.host + '\/reset\/' + token.token + '.\n'
+            };
+
+            transporter.sendMail(mailOptions, function (err) {
+                if (err) {
+                    return res.status(500).send({ msg: err.message });
+                }
+                res.status(200).send('A link to reset your password has been sent to ' + user.email + '.');
+            });
+        });
+    });
+});
+
+// Resets the password.
+/*
+    Incoming:
+    {
+        TokenId: You know what this is
+        Password: String
+    }
+*/
+router.post('/updatepassword', async (req, res, next) => {
+    // Find a matching token
+    Token.findOne({ token: req.body.TokenId }, function (err, token) {
+        if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
+
+        // If we found a token, find a matching user
+        User.findOne({ _id: token._userId}, function (err, user) {
+            if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
+
+            // Update the password.
+            user.Password = req.body.Password;
+            user.save(function (err) {
+                if (err) { return res.status(500).send({ msg: err.message }); }
+                res.status(200).send("The account password has been reset. Please log in.");
             });
         });
     });
@@ -248,7 +322,7 @@ router.post('/addset', async (req, res, next) => {
         await user.save();
 
         return res.status(200).json({ error: error });
-    }); 
+    });
 });
 
 // Edits the set of cards
@@ -268,7 +342,7 @@ router.post('/addset', async (req, res, next) => {
 router.post('/editset', async (req, res, next) => {
     let error = '';
 
-    CardSet.findOneAndUpdate({_id: req.body._id}, {Name: req.body.Name, Public: req.body.Public, Cards: req.body.Cards}, {useFindAndModify: false}, async (err, cardset) => {
+    CardSet.findOneAndUpdate({ _id: req.body._id }, { Name: req.body.Name, Public: req.body.Public, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
         if (!cardset) {
             error = 'Cardset not found';
             return res.status(400).json({ error: error });
@@ -287,7 +361,7 @@ router.post('/editset', async (req, res, next) => {
 router.post('/deleteset', async (req, res, next) => {
     let error = '';
 
-    CardSet.findOneAndRemove({_id: req.body._id}, {useFindAndModify: false}, async (err, cardset) => {
+    CardSet.findOneAndRemove({ _id: req.body._id }, { useFindAndModify: false }, async (err, cardset) => {
         if (!cardset) {
             error = 'Cardset not found';
             return res.status(400).json({ error: error });
