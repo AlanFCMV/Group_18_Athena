@@ -605,7 +605,7 @@ router.post('/searchuserlikes', async (req, res) => {
         {
             res.json(result);
         }
-    }).sort({ LikedBy: -1 });
+    }).sort({ LikedBy: -1 }); // This sorts by array length
 })
 
 // Search from user sorted by alphabetical order
@@ -628,7 +628,7 @@ router.post('/searchuseralpha', async (req, res) => {
         {
             res.json(result);
         }
-    }).sort({ Creator: 'descending' });
+    }).sort({ Name: 'descending' });
 })
 
 module.exports = router;
