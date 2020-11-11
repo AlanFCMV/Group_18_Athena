@@ -268,7 +268,7 @@ router.post('/reset', async (req, res, next) => {
     });
 });
 
-// Resets the password.
+// Resets the password
 /*
     Incoming:
     {
@@ -518,6 +518,117 @@ router.post('/unfollow', async (req, res, next) => {
     });
 });
 
-// Search cardset
+// Search all cardsets existing sorted by date
+/*
+    Incoming:
+    {
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list of valid results
+*/
+router.post('/searchglobaldate', async (req, res) => {
+    CardSet.find({ "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ CreatedAt: 'descending' });
+})
+
+// Search all cardsets existing sorted by likes
+/*
+    Incoming:
+    {
+        Search: String
+    }
+    Outgoing:
+        sorted-by-popularity list of valid results
+*/
+router.post('/searchgloballikes', async (req, res) => {
+    CardSet.find({ "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ LikedBy: -1 }); // This sorts by array length
+})
+
+// Search from user sorted by date
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list of valid results
+*/
+router.post('/searchuserdate', async (req, res) => {
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ CreatedAt: 'descending' });
+})
+
+// Search from user sorted by likes
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-popularity list of valid results
+*/
+router.post('/searchuserlikes', async (req, res) => {
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ LikedBy: -1 });
+})
+
+// Search from user sorted by alphabetical order
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-alphabetical list of valid results
+*/
+router.post('/searchuseralpha', async (req, res) => {
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Creator: 'descending' });
+})
 
 module.exports = router;
