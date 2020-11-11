@@ -639,7 +639,7 @@ router.post('/searchsetuseralpha', async (req, res) => {
         Search: String
     }
     Outgoing:
-        sorted-by-date list from user's liked sets
+        sorted-by-likes list from user's liked sets
 */
 router.post('/searchsetlikedlikes', async (req, res) => {
     CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
@@ -662,7 +662,7 @@ router.post('/searchsetlikedlikes', async (req, res) => {
         Search: String
     }
     Outgoing:
-        sorted-by-date list from user's liked sets
+        sorted-by-alphabetically list from user's liked sets
 */
 router.post('/searchsetlikedalpha', async (req, res) => {
     CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
@@ -675,6 +675,210 @@ router.post('/searchsetlikedalpha', async (req, res) => {
             res.json(result);
         }
     }).sort({ Name: 'ascending' });
+})
+
+// Search all users existing sorted by date
+/*
+    Incoming:
+    {
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list of valid results
+*/
+router.post('/searchuserglobaldate', async (req, res) => {
+    User.find({ "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ CreatedAt: 'descending' });
+})
+
+// Search all users existing sorted by # of followers
+/*
+    Incoming:
+    {
+        Search: String
+    }
+    Outgoing:
+        sorted-by-popularity list of valid results
+*/
+router.post('/searchuserglobalfollowers', async (req, res) => {
+    User.find({ "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Followers: -1 });
+})
+
+// Search all users existing sorted by score
+/*
+    Incoming:
+    {
+        Search: String
+    }
+    Outgoing:
+        sorted-by-score list of valid results
+*/
+router.post('/searchuserglobalscore', async (req, res) => {
+    User.find({ "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Score: 'descending' });
+})
+
+// Search the user's followers existing sorted by # of followers they have
+/*
+    Incoming:
+    {
+        UserId : ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-popularity list of valid results
+*/
+router.post('/searchuserfollowersfollowers', async (req, res) => {
+    User.find({ "Following": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Followers: -1 });
+})
+
+// Search the user's followers existing sorted by the score they have
+/*
+    Incoming:
+    {
+        UserId : ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-score list of valid results
+*/
+router.post('/searchuserfollowersscore', async (req, res) => {
+    User.find({ "Following": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Score: 'descending' });
+})
+
+// Search the user's followers existing sorted by the score they have
+/*
+    Incoming:
+    {
+        UserId : ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-alphabetically list of valid results
+*/
+router.post('/searchuserfollowersalpha', async (req, res) => {
+    User.find({ "Following": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Username: 'ascending' });
+})
+
+// Search the existing people that the user is following sorted by # of followers they have
+/*
+    Incoming:
+    {
+        UserId : ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-popularity list of valid results
+*/
+router.post('/searchuserfollowingfollowers', async (req, res) => {
+    User.find({ "Followers": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Followers: -1 });
+})
+
+// Search the existing people that the user is following sorted by score they have
+/*
+    Incoming:
+    {
+        UserId : ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-score list of valid results
+*/
+router.post('/searchuserfollowingscore', async (req, res) => {
+    User.find({ "Followers": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Score: 'descending' });
+})
+
+// Search the existing people that the user is following sorted alphabetically
+/*
+    Incoming:
+    {
+        UserId : ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-alphabetically list of valid results
+*/
+router.post('/searchuserfollowingalpha', async (req, res) => {
+    User.find({ "Followers": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Username: 'ascending' });
 })
 
 module.exports = router;
