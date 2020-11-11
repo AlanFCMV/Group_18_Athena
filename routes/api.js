@@ -628,7 +628,7 @@ router.post('/searchuseralpha', async (req, res) => {
         {
             res.json(result);
         }
-    }).sort({ Name: 'descending' });
+    }).sort({ Name: 'ascending' });
 })
 
 module.exports = router;
