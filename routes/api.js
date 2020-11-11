@@ -527,7 +527,7 @@ router.post('/unfollow', async (req, res, next) => {
     Outgoing:
         sorted-by-date list of valid results
 */
-router.post('/searchglobaldate', async (req, res) => {
+router.post('/searchsetglobaldate', async (req, res) => {
     CardSet.find({ "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
         if (err)
         {
@@ -549,7 +549,7 @@ router.post('/searchglobaldate', async (req, res) => {
     Outgoing:
         sorted-by-popularity list of valid results
 */
-router.post('/searchgloballikes', async (req, res) => {
+router.post('/searchsetgloballikes', async (req, res) => {
     CardSet.find({ "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
         if (err)
         {
@@ -572,7 +572,7 @@ router.post('/searchgloballikes', async (req, res) => {
     Outgoing:
         sorted-by-date list of valid results
 */
-router.post('/searchuserdate', async (req, res) => {
+router.post('/searchsetuserdate', async (req, res) => {
     CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
         if (err)
         {
@@ -595,7 +595,7 @@ router.post('/searchuserdate', async (req, res) => {
     Outgoing:
         sorted-by-popularity list of valid results
 */
-router.post('/searchuserlikes', async (req, res) => {
+router.post('/searchsetuserlikes', async (req, res) => {
     CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
         if (err)
         {
@@ -618,8 +618,54 @@ router.post('/searchuserlikes', async (req, res) => {
     Outgoing:
         sorted-by-alphabetical list of valid results
 */
-router.post('/searchuseralpha', async (req, res) => {
+router.post('/searchsetuseralpha', async (req, res) => {
     CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ Name: 'ascending' });
+})
+
+// Search liked by a user
+/*
+    Incoming:
+    {
+        LikedBy: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list from user's liked sets
+*/
+router.post('/searchsetlikedlikes', async (req, res) => {
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(result);
+        }
+    }).sort({ LikedBy: -1 });
+})
+
+// Search liked by a user
+/*
+    Incoming:
+    {
+        LikedBy: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list from user's liked sets
+*/
+router.post('/searchsetlikedalpha', async (req, res) => {
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
         if (err)
         {
             res.send(err);
