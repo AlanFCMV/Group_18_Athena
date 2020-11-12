@@ -1,20 +1,20 @@
 import React from 'react';
 
 import PageTitle from '../components/PageTitle';
-import ResetPasswordBox from '../components/ResetPasswordBox';
+import ConfirmEmailSUBox from '../components/ConfirmEmailSUBox';
 
 import './ConfirmEmailPWPage.css';
 
 
-const ResetPasswordPage = () =>
+const ConfirmEmailSUPage = () =>
 {
 
     return(
         <div class="fpp">
             <PageTitle />
-            <ResetPasswordBox />
+            <ConfirmEmailSUBox />
         </div>
     );
 };
 
-export default ResetPasswordPage;
+export default ConfirmEmailSUPage;

@@ -48,8 +48,8 @@ function Login() {
       alert(e.toString());
       return;
     }  */
-
-    alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
+    window.location.href="./Menu";
+    //alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
   };
 
   // Password Visablility Toggling

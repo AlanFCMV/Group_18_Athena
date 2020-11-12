@@ -45,7 +45,7 @@ function Signup()
                             </div>
 
                             {/* <button class="btn" id="signup" type="button" onClick={doSignup}><i class="fa fa-sign-in-alt"></i> Sign up </button> */}
-                            <a class="btn" id="signup" type="button" href="./ConfirmEmail"><i class="fa fa-sign-in-alt"></i> Sign up </a>
+                            <a class="btn" id="signup" type="button" href="./ConfirmEmailSU"><i class="fa fa-sign-in-alt"></i> Sign up </a>
                 
                         </form>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import './ForgotPasswordBox.css';
+import './ConfirmEmailPWBox.css';
 
 function ConfirmationBox() {
 

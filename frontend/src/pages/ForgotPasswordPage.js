@@ -3,7 +3,7 @@ import React from 'react';
 import PageTitle from '../components/PageTitle';
 import ForgotPasswordBox from '../components/ForgotPasswordBox';
 
-import './ForgotPasswordPage.css';
+import './ConfirmEmailPWPage.css';
 
 
 const ForgotPasswordPage = () =>

@@ -4,11 +4,12 @@ import './App.css';
 
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-import Navigation from './components/Navigation';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ConfirmEmailPage from './pages/ConfirmEmailPage';
+import ConfirmEmailPWPage from './pages/ConfirmEmailPWPage';
+import ConfirmEmailSUPage from './pages/ConfirmEmailSUPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import MenuPage from './pages/MenuPage.js';
 
 function App() {
   return (
@@ -23,14 +24,20 @@ function App() {
         <Route path="/ForgotPassword" exact>
           <ForgotPasswordPage />
         </Route>
-        <Route path="/ConfirmEmail" exact>
-          <ConfirmEmailPage />
+        <Route path="/ConfirmEmailPW" exact>
+          <ConfirmEmailPWPage />
+        </Route>
+        <Route path="/ConfirmEmailSU" exact>
+          <ConfirmEmailSUPage />
         </Route>
         <Route path="/confirmation" exact>
           <ConfirmationPage />
         </Route>
-        <Route path="/ResetPassword" exact>
+        <Route path="/reset" exact>
           <ResetPasswordPage />
+        </Route>
+        <Route path="/menu" exact>
+          <MenuPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

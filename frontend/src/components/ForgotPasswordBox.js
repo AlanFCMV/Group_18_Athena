@@ -3,25 +3,25 @@ import './ForgotPasswordBox.css';
 
 function ForgotPasswordBox() {
 
-    var email="\"insert email here\""
+    var email;
+    
+    const doConfirm = async event => {}
 
     return (
         <div>
             <div class="modal-dialog text-center row">
-                <div class="col-md-12 fp-box">
+                <div class="col-md-8 pw-boxes">
                     <div class="modal-content">
-                        <h2>Password Reset Email Sent</h2>
-                        <p>We sent an email to {email}</p>
-                        <p>Click the link you find in the email and you’ll be brought back to Athena</p>
-                        <p>If you do not see the email, check your spam folder or resend it here</p>
+                        <form class="col-12" onSubmint={doConfirm}>
+                        <div class="form-group usernameBox">
+                            <input type="text" id="email" class="form-control" placeholder="Email" ref={(c) => email = c} />
+                        </div>
+                        <a class="btn" id="passwordChange" type="button" href="./ConfirmEmailPW"><i class="fa fa-sign-in-alt"></i> Request Password Change </a>
+                        </form>
                     </div>
                 </div>
                 
             </div>
-            <div class="row text-center">
-                <button class="col-md-4 btn" id="resend-email" type="button" onClick={""}><i class="fa fa-sign-in-alt"></i> Resend Email </button>
-            </div>
-            
         </div>
         
 

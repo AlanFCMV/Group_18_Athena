@@ -1,7 +1,7 @@
 import React from 'react';
-import './ForgotPasswordBox.css';
+import './ConfirmEmailPWBox.css';
 
-function ConfirmEmailBox() {
+function ConfirmEmailPWBox() {
 
     var email="\"insert email here\""
 
@@ -10,7 +10,7 @@ function ConfirmEmailBox() {
             <div class="modal-dialog text-center row">
                 <div class="col-md-12 fp-box">
                     <div class="modal-content">
-                        <h2>Confirmation Email Sent</h2>
+                        <h2>Password Reset Email Sent</h2>
                         <p>We sent an email to {email}</p>
                         <p>Click the link you find in the email and you’ll be brought back to Athena</p>
                         <p>If you do not see the email, check your spam folder or resend it here</p>
@@ -28,4 +28,4 @@ function ConfirmEmailBox() {
     );
 };
 
-export default ConfirmEmailBox;
+export default ConfirmEmailPWBox;
