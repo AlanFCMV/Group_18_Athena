@@ -1,55 +1,57 @@
 import React, { useState } from 'react';
 import './Login.css';
 import useTogglePassword from "../hooks/useTogglePassword";
+import { json } from 'body-parser';
 
 function Login() {
-/*
+
   const appName = 'athena18'
   function buildPath(route){
-    if(ProcessingInstruction.env.NODE_ENV ==='production'){
-      return 'https://' + appNAME + '.herokuapp.com/' + route;
+    if(process.env.NODE_ENV ==='production'){
+      return 'https://' + appName + '.herokuapp.com/' + route;
     }
     else{
       return 'http://localhost:5000/' + route;
     }
-  }*/
-
+  }
+  
   var loginName;
   var loginPassword;
 
-  // const [message, setMessage] = useState('');
+   const [message, setMessage] = useState('');
 
   const doLogin = async event => {
     event.preventDefault();
-/*
-    // trying to figure out how to connect react to express/node.js
-    var obj = {Username:loginName.value, Email:loginName.value, Password:loginPassword.value};
+
+    var obj = {Login:loginName.value, Password:loginPassword.value};
     var js = JSON.stringify(obj);
 
     try{
-      const response = await fetch(buildPath('./routes/api'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
-      
+      const response = await fetch(buildPath('api/login'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+      console.log(response);
       var res = JSON.parse(await response.text());
 
-      if(res.id <= 0)
+      if(res.error)
       {
-        setMessage('User/Password combination incorrect');
+        document.getElementById('addError').innerHTML = res.error;
       }
+
       else
       {
-        var user = {Username:res.Username, Email:res.Email, id:res.id};
-        localStorage.setItem('user_data', JSON.stringify(user));
+        var user = {Login:res.Login, Password:res.Password};
+        localStorage.setItem('user', JSON.stringify(user));
         setMessage('');
-        window.location.href = '../pages/LandingPage';
+        //window.location.href = './Menu';
       }
     }
+
     catch(e)
     {
       alert(e.toString());
       return;
-    }  */
-    window.location.href="./Menu";
-    //alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
+    }  
+
+   // alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
   };
 
   // Password Visablility Toggling
@@ -63,7 +65,7 @@ function Login() {
         <div class="col-md-8 login-box">
           <div class="modal-content">
             <form class="col-12" onSubmit={doLogin}>
-              
+            
               <div class="form-group usernameBox">
                 <input type="text" id="loginName" class="form-control" placeholder="Username or Email" ref={(c) => loginName = c} />
               </div>
@@ -72,7 +74,7 @@ function Login() {
                 <input type={PasswordInputType} id="loginPassword" class="form-control" placeholder="Password" ref={(c) => loginPassword = c} />
                 <span class="password-icon">{ToggleIcon}</span>
               </div>
-
+             
               <div class="checkbox-class">
                   <input type="checkbox" id="remember" /> Remember Me
               </div>
@@ -86,7 +88,7 @@ function Login() {
 
               <a class="forgot-password-link links" href="./ForgotPassword">Forgot Password?</a> 
               
-              <p id="response"></p> {/*error messages for login go here*/}
+              <p id="addError"></p>
 
           </div>
         </div>

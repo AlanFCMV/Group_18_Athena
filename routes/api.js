@@ -36,6 +36,7 @@ router.post('/login', async (req, res, next) => {
             error = 'Login and Password combination incorrect';
             return res.status(400).json({ error: error });
         }
+        
         // Ensures the found user has the correct password.
         let passwordMatch = await user.comparePassword(req.body.Password, this.Password);
         if (!passwordMatch) {
