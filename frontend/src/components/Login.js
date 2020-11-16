@@ -41,7 +41,7 @@ function Login() {
         var user = {Login:res.Login, Password:res.Password};
         localStorage.setItem('user', JSON.stringify(user));
         setMessage('');
-        //window.location.href = './Menu';
+        window.location.href = './Menu';
       }
     }
 
