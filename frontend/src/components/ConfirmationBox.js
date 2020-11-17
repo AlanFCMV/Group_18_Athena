@@ -14,7 +14,7 @@ function ConfirmationBox() {
   }
     const { token } = useParams();
 
-    window.onload = async event => {
+    const doVerify = async event => {
         event.preventDefault();
 
         var obj = {TokenId:token};
@@ -25,6 +25,7 @@ function ConfirmationBox() {
             const response = await fetch(buildPath('api/confirmation'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
             //var res = JSON.parse(await response.text());
             //console.log(res.msg)
+            window.location.assign("http://athena18.herokuapp.com")
         }
         catch(e)
         {
@@ -47,7 +48,7 @@ function ConfirmationBox() {
                 
             </div>
             <div class="row text-center">
-                <a class="col-md-4 btn" id="return-to-login" type="button" href="./"><i class="fa fa-sign-in-alt"></i> Log In </a>
+                <a class="col-md-4 btn" id="return-to-login" type="button" onClick={doVerify}><i class="fa fa-sign-in-alt"></i> Log In </a>
             </div>
         </div>
         
