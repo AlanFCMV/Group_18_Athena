@@ -15,7 +15,7 @@ function ResetPasswordBox() {
     }
   }
 
-    var newPassword;
+    var newPassword 
     var samePassword;
 
     const { token } = useParams();
@@ -24,26 +24,33 @@ function ResetPasswordBox() {
 
         var obj = {TokenId:token, Password:newPassword.value};
         var js = JSON.stringify(obj);
-
-        try{
-            const respone = await fetch(buildPath('api/updatepassword'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
-            var res = JSON.parse(await respone.text());
-           
-            if(newPassword.value != samePassword.value){
-                document.getElementById('addError').innerHTML = "Passwords do not match, please try again";
-            }
-            else{
-                
-                var user={Password:res.Password};
-                localStorage.setItem('user', JSON.stringify(user));
-                document.getElementById('addError').innerHTML = "The account password has been reset. Please log in.";
+        if(newPassword.value && samePassword.value){
+            try{
+                const respone = await fetch(buildPath('api/updatepassword'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+                var res = JSON.parse(await respone.text());
             
+                if(newPassword.value != samePassword.value){
+                    document.getElementById('addError').innerHTML = "Passwords do not match, please try again";
+                }
+                else{
+                    
+                    var user={Password:res.Password};
+                    localStorage.setItem('user', JSON.stringify(user));
+                    document.getElementById('addError').innerHTML = "The account password has been reset. Sending you back to Login.";
+                    setTimeout(function() {window.location.assign("http://athena18.herokuapp.com")},5000);
+                
+                }
+        
             }
-    
+            catch(e){
+                return;
+            }
+            
         }
-        catch(e){
-            return;
+        else{
+            document.getElementById('addError').innerHTML = "Please fill out both fields";
         }
+        
     }
 
     // Password Toggling
