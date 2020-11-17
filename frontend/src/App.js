@@ -15,31 +15,46 @@ function App() {
   return (
     <Router >
       <Switch>
+
         <Route path="/" exact>
           <LoginPage />
         </Route>
+
         <Route path ="/Signup" exact>
           <SignupPage />
         </Route>
+
         <Route path="/ForgotPassword" exact>
           <ForgotPasswordPage />
         </Route>
+
         <Route path="/ConfirmEmailPW" exact>
           <ConfirmEmailPWPage />
         </Route>
+
         <Route path="/ConfirmEmailSU" exact>
           <ConfirmEmailSUPage />
         </Route>
-        <Route path="/confirmation" exact>
+
+        <Route exact path="/confirmation" >
           <ConfirmationPage />
         </Route>
+
+        <Route path="/confirmation/:token" >
+          <ConfirmationPage />
+        </Route>
+        
+
         <Route path="/reset" exact>
           <ResetPasswordPage />
         </Route>
+
         <Route path="/menu" exact>
           <MenuPage />
         </Route>
+
         <Redirect to="/" />
+
       </Switch>  
     </Router>
   );

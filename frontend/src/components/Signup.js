@@ -9,7 +9,7 @@ function Signup()
       return 'https://' + appName + '.herokuapp.com/' + route;
     }
     else{
-      return 'http://localhost:5000/' + route;
+      return 'http://localhost:5000/' + route; 
     }
   }
     var newEmail;
