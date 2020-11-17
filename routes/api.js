@@ -209,7 +209,7 @@ router.post('/resend', async (req, res, next) => {
             let mailOptions = {
                 from: 'Athena <no-reply@athena18.herokuapp.com>',
                 to: user.Email, subject: 'Account Verification',
-                text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
+                text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '\n'
             };
 
             transporter.sendMail(mailOptions, function (err) {
@@ -256,7 +256,7 @@ router.post('/reset', async (req, res, next) => {
             let mailOptions = {
                 from: 'Athena <no-reply@athena18.herokuapp.com>',
                 to: user.Email, subject: 'Password Reset',
-                text: 'Hello,\n\n' + 'Please reset your password by clicking the link: \nhttp:\/\/' + req.headers.host + '\/reset\/' + token.token + '.\n'
+                text: 'Hello,\n\n' + 'Please reset your password by clicking the link: \nhttp:\/\/' + req.headers.host + '\/reset\/' + token.token + '\n'
             };
 
             transporter.sendMail(mailOptions, function (err) {
