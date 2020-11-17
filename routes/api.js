@@ -263,7 +263,7 @@ router.post('/reset', async (req, res, next) => {
                 if (err) {
                     return res.status(500).send({ msg: err.message });
                 }
-                return res.status(200).send({msg: 'A link to reset your password has been sent to ' + user.email + '.'});
+                return res.status(200).send({msg: 'A link to reset your password has been sent to ' + user.Email + '.'});
             });
         });
     });
