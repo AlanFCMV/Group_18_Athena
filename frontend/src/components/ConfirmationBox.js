@@ -25,8 +25,7 @@ function ConfirmationBox() {
             const response = await fetch(buildPath('api/confirmation'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
             console.log(res.msg)
-            //var user = {token:res.token}
-            //localStorage.setItem('user', JSON.stringify(user));
+
         }
         catch(e)
         {

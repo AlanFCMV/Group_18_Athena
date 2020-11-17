@@ -36,11 +36,11 @@ function App() {
           <ConfirmEmailSUPage />
         </Route>
 
-        <Route exact path="/confirmation" >
+        <Route exact path="/confirmation">
           <ConfirmationPage />
         </Route>
 
-        <Route path="/confirmation/:token" >
+        <Route path="/confirmation/:token">
           <ConfirmationPage />
         </Route>
         

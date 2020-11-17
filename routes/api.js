@@ -130,7 +130,7 @@ router.post('/register', async (req, res, next) => {
                         from: 'Athena <no-reply@athena18.herokuapp.com>',
                         to: req.body.Email,
                         subject: 'Account Verification',
-                        text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
+                        text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '\n'
                     };
 
                     transporter.sendMail(mailOptions, function (error, info) {
