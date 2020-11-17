@@ -1,13 +1,50 @@
 import React from 'react';
 import './ResetPasswordBox.css';
 import useTogglePassword from '../hooks/useTogglePassword';
+import { useParams } from 'react-router-dom';
+
 
 function ResetPasswordBox() {
+    const appName = 'athena18'
+    function buildPath(route){
+    if(process.env.NODE_ENV ==='production'){
+      return 'https://' + appName + '.herokuapp.com/' + route;
+    }
+    else{
+      return 'http://localhost:5000/' + route; 
+    }
+  }
 
     var newPassword;
     var samePassword;
+
+    const { token } = useParams();
     
-    const doConfirm = async event => {}
+    const doConfirm = async event => {
+
+        var obj = {TokenId:token, Password:newPassword.value};
+        var js = JSON.stringify(obj);
+
+        try{
+            const respone = await fetch(buildPath('api/updatepassword'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await respone.text());
+           
+            if(newPassword.value != samePassword.value){
+                document.getElementById('addError').innerHTML = "Passwords do not match, please try again";
+            }
+            else{
+                
+                var user={Password:res.Password};
+                localStorage.setItem('user', JSON.stringify(user));
+                document.getElementById('addError').innerHTML = "The account password has been reset. Please log in.";
+            
+            }
+    
+        }
+        catch(e){
+            return;
+        }
+    }
 
     // Password Toggling
     const [PasswordInputType, ToggleIcon] = useTogglePassword();
@@ -28,8 +65,9 @@ function ResetPasswordBox() {
                                 <input type={ConfirmPasswordType} id="confirmPassword" class="form-control" placeholder=" Confirm Password" ref={(c) => samePassword = c} />
                                 <span class="password-iconConfirmReset">{secondToggleIcon}</span>
                             </div>
-                            <a class="btn" id="signup" type="button" href="./"><i class="fa fa-sign-in-alt"></i> Reset Password </a>
+                            <a class="btn" id="signup" type="button" onClick={doConfirm}><i class="fa fa-sign-in-alt"></i> Reset Password </a>
                         </form>
+                        <p id='addError'></p>
                     </div>
                 </div>
                 

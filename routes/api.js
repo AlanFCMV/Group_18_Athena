@@ -289,8 +289,8 @@ router.post('/updatepassword', async (req, res, next) => {
             // Update the password.
             user.Password = req.body.Password;
             user.save(function (err) {
-                if (err) { return res.status(500).send({ msg: err.message }); }
-                res.status(200).send("The account password has been reset. Please log in.");
+                if (err) { return res.status(500)}
+                res.status(200).send({msg: "The account password has been reset. Please log in."});
             });
         });
     });

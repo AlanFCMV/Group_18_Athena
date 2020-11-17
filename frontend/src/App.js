@@ -49,6 +49,10 @@ function App() {
           <ResetPasswordPage />
         </Route>
 
+        <Route path="/reset/:token">
+          <ResetPasswordPage />
+        </Route>
+
         <Route path="/menu" exact>
           <MenuPage />
         </Route>
