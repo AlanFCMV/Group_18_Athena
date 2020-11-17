@@ -882,4 +882,55 @@ router.post('/searchuserfollowingalpha', async (req, res) => {
     }).sort({ Username: 'ascending' });
 })
 
+/*
+incoming:
+{
+    UserId : String
+}
+outgoing:
+{
+    Everything in User except Email and Password (check ../models/User),
+    error : String
+}
+*/
+router.post('/infouser', async (req, res, next) => {
+    let error = '';
+
+    User.findOne({ "_id" : req.body.UserId }, async (err, user) => {
+
+        // Returns the selected values for use.
+        let ret = {
+            _id: user._id,
+            Score: user.Score,
+            Username: user.Username,
+            CreatedCardSets: user.CreatedCardSets,
+            LikedCardSets: user.LikedCardSets,
+            Following: user.Following,
+            Followers: user.Followers,
+            CreatedAt: user.CreatedAt,
+            error: error
+        };
+
+        return res.status(200).json({ ret });
+    });
+
+});
+
+/* 
+incoming:
+{
+    SetId : String
+}
+outgoing:
+    returns set
+*/
+router.post('/infoset', async (req, res, next) => {
+
+    CardSet.findOne({ "_id" : req.body.SetId }, async (err, cardset) => {
+
+        return res.status(200).json({ cardset });
+    });
+
+});
+
 module.exports = router;
