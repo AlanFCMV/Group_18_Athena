@@ -636,7 +636,7 @@ router.post('/searchsetuseralpha', async (req, res) => {
 /*
     Incoming:
     {
-        LikedBy: ObjectId,
+        UserId: ObjectId,
         Search: String
     }
     Outgoing:
@@ -659,7 +659,7 @@ router.post('/searchsetlikedlikes', async (req, res) => {
 /*
     Incoming:
     {
-        LikedBy: ObjectId,
+        UserId: ObjectId,
         Search: String
     }
     Outgoing:
@@ -932,5 +932,116 @@ router.post('/infoset', async (req, res, next) => {
     });
 
 });
+
+// Search sets created by user and sets liked by user
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        Respective sorted-by-alphabetic list from user's set and sets they liked
+*/
+router.post('/searchuserneedsalpha', async (req, res) => {
+    let obj = {};
+
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            obj = result;
+        }
+    }).sort({ Name: 'ascending' });
+
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            result = result.concat(obj);
+            res.json(result);
+        }
+    }).sort({ Name: 'ascending' });
+})
+
+// Search sets created by user and sets liked by user
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        Respective sorted-by-date list from user's set and sets they liked
+*/
+router.post('/searchuserneedsdate', async (req, res) => {
+    let obj = {};
+
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            obj = result;
+        }
+    }).sort({ CreatedAt: 'descending' });
+
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            result = result.concat(obj);
+            res.json(result);
+        }
+    }).sort({ CreatedAt: 'descending' });
+})
+
+// Search sets created by user and sets liked by user
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        Respective sorted-by-popularity list from user's set and sets they liked
+*/
+router.post('/searchuserneedslikes', async (req, res) => {
+    let obj = {};
+
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            obj = result;
+        }
+    }).sort({ LikedBy: -1 });
+
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            result = result.concat(obj);
+            res.json(result);
+        }
+    }).sort({ LikedBy: -1 });
+})
 
 module.exports = router;
