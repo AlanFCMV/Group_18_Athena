@@ -51,6 +51,10 @@ function ConfirmEmailSUBox() {
                         <p>If you do not see the email, check your spam folder or resend it here</p>
                     </div>
                 </div>
+<<<<<<< HEAD
+=======
+                
+>>>>>>> 84f0a6e523bcdda15e6bd2855f4c0e2a8df61a48
             </div>
 
             <div class = "modal-dialog text-center row">

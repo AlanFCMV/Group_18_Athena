@@ -1,0 +1,74 @@
+.myQuizRow
+{
+    width: 100%;
+}
+
+.myQuiz
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 55px;
+    text-align: center;
+    width: 100%;
+    border: solid 1px #D99512;
+}
+
+.quizLink
+{
+    color: white;
+    font-size: 24px;
+    height: 100%;
+    width: 100%;
+    background: none;
+    border: none;
+}
+
+.view-my-quizzes
+{
+    margin-top: 80px;
+    height: 86%;
+    overflow: auto;
+}
+
+.view-my-quizzes-table
+{
+    width: 100%;
+}
+
+.view-my-quizzes::-webkit-scrollbar {
+    display: none;
+  }
+
+
+.search-bar-form
+{
+    margin-top: 90px;
+    height: 50px;
+    border: solid 1px #D99512;
+}
+
+.search-bar
+{
+    height: 50px;
+    width: 85%;
+    background: none;
+    color: white;
+    border: none;
+}
+
+.search-button
+{
+    position: relative;
+    bottom: 4px;
+}
+
+.search-icon
+{
+    width: 40px;
+}
+
+.follower-count-div
+{
+    border: solid 1px #D99512;
+    margin-top: 20px;
+}

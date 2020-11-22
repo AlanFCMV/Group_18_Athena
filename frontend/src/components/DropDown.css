@@ -1,0 +1,50 @@
+.menu
+{
+    color: black;
+    position: absolute;
+    top: 19px;
+    right: -45px;
+    width: 230px;
+    height: 220px;
+    background-image: linear-gradient(to bottom, #D99512 25%, white);
+}
+
+.dropdown-list
+{
+    list-style-type: none;
+}
+
+.dropdown-items
+{
+    width: 230px;
+    margin-left: -40px;
+    background: none;
+    border: hidden;
+    filter: drop-shadow(0px 4px 4px black);
+}
+
+.dropdown-items:focus {
+     outline: none; 
+}
+ 
+.dropdown-items:hover
+{
+    filter: none;
+}
+
+.menu-image
+{
+    margin: 10px;
+    margin-left: -20px;
+    width: 50px;
+}
+
+.add
+{
+    margin-left: -67px;
+}
+
+.book
+{
+    margin-left: -58px;
+}

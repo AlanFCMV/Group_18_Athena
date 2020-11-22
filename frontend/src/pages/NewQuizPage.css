@@ -1,0 +1,112 @@
+/* .column1
+{
+    background: red;
+} */
+
+/* .column2
+{
+    border: solid 1px red;
+} */
+
+.column3
+{
+    background-position: center 65%;
+    background-image: url(../img/owlA.png);
+    background-repeat: no-repeat;
+    background-size: 90%;
+    opacity: 0.10;
+}
+
+/* .help
+{
+    margin-right: 41px;
+
+} */
+
+.help
+{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+.help-icon
+{
+    width: 50px;
+    filter: drop-shadow(0px 4px 2px black);
+}
+
+.help-icon:hover
+{
+    cursor: pointer;
+    filter: none;
+}
+
+.long-inputs
+{
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    background: transparent;
+    border: solid 3px #D99512;
+    height: 50px;
+    width: 90%;
+    margin-top: 10px;
+}
+
+.short-inputs
+{
+    text-align: top;
+    color: white;
+    font-size: 20px;
+    background: transparent;
+    border: solid 3px #D99512;
+    height: 100px;
+    width: 42%;
+    margin-top: 10px;
+    margin-right: 1.75%;
+    resize: none;
+}
+
+.save-quiz-form
+{
+    margin-top: 80px;
+    height: 85%;
+}
+
+.save-quiz
+{
+    position: relative;
+    left: 10px;
+    bottom: 5px;
+
+}
+
+.add-question
+{
+    position: relative;
+    left: 87.5%;
+    top: 30px;
+}
+
+.remove-question
+{
+    position: relative;
+    bottom: 45px;
+}
+
+.questions-answers
+{
+    height: 88%;
+    width: 105%;
+    overflow: auto;
+}
+
+.add-edit-table
+{
+    width: 100%;
+}
+
+.questions-answers::-webkit-scrollbar {
+    display: none;
+  }
