@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, Component} from 'react';
 import useTogglePassword from "../hooks/useTogglePassword"; 
 import './Login.css';
+
 function Signup()
 {
     const appName = 'athena18'

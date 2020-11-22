@@ -216,7 +216,7 @@ router.post('/resend', async (req, res, next) => {
                 if (err) {
                     return res.status(500).send({ msg: err.message });
                 }
-                res.status(200).send('A verification email has been sent to ' + user.email + '.');
+                return res.status(200).send({msg: 'A verification email has been sent to the address listed above.'});
             });
         });
     });
