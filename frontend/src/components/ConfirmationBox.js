@@ -29,7 +29,7 @@ function ConfirmationBox() {
         }
         catch(e)
         {
-            alert(e.toString());
+            //alert(e.toString());
             return;
         }
     }

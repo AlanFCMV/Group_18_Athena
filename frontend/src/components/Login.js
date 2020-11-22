@@ -26,30 +26,36 @@ function Login() {
     var obj = {Login:loginName.value, Password:loginPassword.value};
     var js = JSON.stringify(obj);
 
-    try{
-      const response = await fetch(buildPath('api/login'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
-      console.log(response);
-      var res = JSON.parse(await response.text());
-
-      if(res.error)
-      {
-        document.getElementById('addError').innerHTML = res.error;
-      }
-
-      else
-      {
-        var user = {Login:res.Login, Password:res.Password};
-        localStorage.setItem('user', JSON.stringify(user));
-        setMessage('');
-        window.location.href = './Menu';
-      }
-    }
-
-    catch(e)
+    if(loginName.value && loginPassword.value)
     {
-      alert(e.toString());
-      return;
-    }  
+      try{
+        const response = await fetch(buildPath('api/login'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        console.log(response);
+        var res = JSON.parse(await response.text());
+
+        if(res.error)
+        {
+          document.getElementById('addError').innerHTML = res.error;
+        }
+
+        else
+        {
+          var user = {Login:res.Login, Password:res.Password};
+          localStorage.setItem('user', JSON.stringify(user));
+          setMessage('');
+          window.location.href = './Menu';
+        }
+      }
+
+      catch(e)
+      {
+        alert(e.toString());
+        return;
+      }  
+    }
+    else{
+        document.getElementById('addError').innerHTML = "Please fill out both fields";
+    }
 
    // alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
   };

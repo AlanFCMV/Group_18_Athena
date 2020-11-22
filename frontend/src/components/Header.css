@@ -1,0 +1,100 @@
+.navbar-title
+{
+    height: 70px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+.navbar-dropdown-icon
+{
+    width: 57px;
+    filter: drop-shadow(0px 4px 2px black);
+}
+
+.navbar-dropdown-icon:hover
+{
+    cursor: pointer;
+    filter: none;
+}
+
+.navbar-logout-icon
+{
+    width: 65px;
+    filter: drop-shadow(0px 4px 2px black);
+}
+
+.navbar-logout-icon:hover
+{
+    cursor: pointer;
+    filter: none;
+}
+
+.navbar-compass
+{
+    margin-left: 41px;
+    margin-right: 41px;
+}
+
+.navbar-compass-icon
+{
+    width: 50px;
+    filter: drop-shadow(0px 4px 2px black);
+}
+
+.navbar-compass-icon:hover
+{
+    cursor: pointer;
+    filter: none;
+}
+
+.navbar-list
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-image: linear-gradient(to right, black, #D99512);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    width: 100%;
+}
+
+.navbar-item
+{
+    float: right;
+}
+
+.navbar-item-title
+{
+    float: left;
+}
+
+.popup-arrow
+{
+    opacity: 0;
+}
+
+.small-icon
+{
+    width: 25px;
+}
+
+.clickable-icon
+{
+    width: 45px;
+    filter: drop-shadow(0px 4px 2px black);
+}
+
+.clickable-icon:hover
+{
+    cursor: pointer;
+    filter: none;
+}

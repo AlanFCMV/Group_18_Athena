@@ -16,7 +16,7 @@ function ConfirmEmailSUBox() {
                         <p>If you do not see the email, check your spam folder or resend it here</p>
                     </div>
                 </div>
-            
+                
             </div>
             <div class="row text-center">
                 <button class="col-md-4 btn" id="resend-email" type="button" onClick={""}><i class="fa fa-sign-in-alt"></i> Resend Email </button>

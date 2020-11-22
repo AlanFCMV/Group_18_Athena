@@ -24,34 +24,44 @@ function Signup()
 
         var obj = {Username:newUsername.value, Password:newPassword.value, Email:newEmail.value};
         var js = JSON.stringify(obj);
-        try{
-            console.log("In the try")
-            const response = await fetch(buildPath('api/register'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
-            console.log(response)
-            var res = JSON.parse(await response.text());
-
-            if(res.error)
-            {   
-                document.getElementById('addError').innerHTML = res.error;
-            }
-            else if(newPassword.value != samePassword.value)
+        if(newEmail.value && newUsername.value && newPassword.value && samePassword.value){
+            
+            if (newPassword.value === samePassword.value)
             {
-                console.log("passwords not the same")
-                document.getElementById('addError').innerHTML = res.error;
+            
+                try{
+                    console.log("In the try")
+                    const response = await fetch(buildPath('api/register'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+                    console.log(response)
+                    var res = JSON.parse(await response.text());
+        
+                    if(res.error)
+                    {   
+                        document.getElementById('addError').innerHTML = res.error;
+                    }
+                    
+                    else{
+                        console.log("working")
+                        console.log(newEmail.value)
+                        var user ={Username:res.Username, Email:res.Email, Password:res.Password};
+                        localStorage.setItem('user', JSON.stringify(user));
+                        window.location.href = "./ConfirmEmailSU";
+                    }
+                }
+
+                catch(e)
+                {
+                //alert(e.toString());
+                return;
+                }
             }
             else{
-                console.log("working")
-                console.log(newEmail.value)
-                var user ={Username:res.Username, Email:res.Email, Password:res.Password};
-                localStorage.setItem('user', JSON.stringify(user));
-                window.location.href = "./ConfirmEmailSU";
-            }
+                document.getElementById('addError').innerHTML = "Passwords do not match, please try again";
+            } 
         }
-
-        catch(e)
-        {
-            alert(e.toString());
-            return;
+        
+        else{
+            document.getElementById('addError').innerHTML = "Please fill out all fields";
         }
 
        // alert('doIt() ' + newEmail+ '' + newUsername.value + '' + newPassword.value);
