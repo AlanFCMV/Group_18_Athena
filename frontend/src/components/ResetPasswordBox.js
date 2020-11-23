@@ -26,7 +26,7 @@ function ResetPasswordBox() {
         var js = JSON.stringify(obj);
         if(newPassword.value && samePassword.value){
             try{
-                const respone = await fetch(buildPath('api/updatepassword'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+                const respone = await fetch(buildPath('api/reset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
                 var res = JSON.parse(await respone.text());
             
                 if(newPassword.value != samePassword.value){
