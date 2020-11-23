@@ -6,6 +6,44 @@ import HelpNewQuiz from '../components/HelpNewQuiz';
 
 const NewQuizPage = () =>
 {
+    const appName = 'athena18'
+    function buildPath(route){
+    if(process.env.NODE_ENV ==='production'){
+      return 'https://' + appName + '.herokuapp.com/' + route;
+    }
+    else{
+      return 'http://localhost:5000/' + route; 
+    }
+  }
+
+  var name;
+  var question;
+  var answer;
+
+  const doAddSet = async event =>{
+      event.preventDefault();
+
+      var obj = {Name:name, Question:question, Answer:answer};
+      var js = JSON.stringify(obj);
+
+        try{
+            const response = await fetch(buildPath('api/addset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await response.text());
+
+            if(res.error){
+                document.getElementById('addError').innerHTML = res.error;
+            }
+            console.log("made it!")
+            console.log(_id)
+            
+            var user = {Name:res.Name, Question:res.Question, Answer:res.Answer};
+            localStorage.setItem('user', JSON.stringify(user));
+        }
+        catch(e){
+            return;
+        }
+  }
+
 
     // As of right now, the values of quest and answer aren't actually used    
     var [questions, setQuestions] = useState([{quest: "", answer: ""},]);
@@ -44,8 +82,7 @@ const NewQuizPage = () =>
             // }
             
             /* Remove the selected element from the questions array*/
-            questions.splice(e.target.id-1,1);
-            questions = questions
+            questions = questions.splice(e.target.id-1,1);
             setQuestions(questions => [...questions]);
             
         }
@@ -88,6 +125,7 @@ const NewQuizPage = () =>
                         <Popup trigger={
                             <a className="help">
                                 <img className="help-icon" alt="Help" src={require("../img/help.png")}/>
+                                <p id='addError'></p>
                             </a>
                         } position="top right">
                             <HelpNewQuiz />
@@ -97,7 +135,7 @@ const NewQuizPage = () =>
                     <div className="col-6 column2 vh-100">
                         <form className="save-quiz-form">
                             <input type="text" className="long-inputs" id="quiz-title" placeholder="Quiz Title"/>
-                            <a className="save-quiz" onClick={saveQuiz}><img className="clickable-icon" alt="Save" src={require("../img/save.png")}/></a>
+                            <a className="save-quiz" onClick={doAddSet}><img className="clickable-icon" alt="Save" src={require("../img/save.png")}/></a>
 
                             <div className="questions-answers">
                                 <table className="add-edit-table">
