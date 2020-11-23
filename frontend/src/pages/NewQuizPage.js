@@ -34,7 +34,7 @@ const NewQuizPage = () =>
                 document.getElementById('addError').innerHTML = res.error;
             }
             console.log("made it!")
-            console.log(_id)
+            
             
             var user = {Name:res.Name, Question:res.Question, Answer:res.Answer};
             localStorage.setItem('user', JSON.stringify(user));
