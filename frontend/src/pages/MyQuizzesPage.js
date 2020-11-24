@@ -44,19 +44,10 @@ const MyQuizzesPage = () =>
 
     const renderQuizzes = (quiz, index) =>
     {
-        // i++;
-        // var nameq = "quiz-question-" + i.toString();
-        // var namea = "quiz-answer-" + i.toString();
-        // var idq = "quiz-questions-" + i.toString();
-        // var ida = "quiz-answer-" + i.toString();
-        // var placeholderq = "Question " + i.toString();
-        // var placeholdera = "Answer " + i.toString();
-        // var val = "" + i.toString();
-
         return (
             <tr className="myQuizRow" key={index}>
                 <div className="myQuiz">
-                    <button className="quizLink" onClick={viewQuiz}>{quiz.title}</button>
+                    <button className="quizButton" onClick={viewQuiz}>{quiz.title}</button>
                 </div>
             </tr>
         )

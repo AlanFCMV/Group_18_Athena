@@ -1,0 +1,186 @@
+.userQuizRow
+{
+    width: 100%;
+}
+
+.userQuiz
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 100px;
+    width: 100%;
+}
+
+.userquizButton
+{
+    color: white;
+    font-size: 24px;
+    height: 57%;
+    width: 100%;
+    background: none;
+    border: solid 1px #D99512;
+}
+
+.quizcreatorButton
+{ 
+    margin-top: 6px;
+    color: white;
+    font-size: 16px;
+    height: 37%;
+    width: 100%;
+    background: none;
+    border: solid 1px #D99512;
+}
+
+
+.view-global-quizzes
+{
+    margin-top: 80px;
+    height: 86%;
+    overflow: auto;
+}
+
+.view-global-quizzes-table
+{
+    width: 100%;
+}
+
+.view-global-quizzes::-webkit-scrollbar {
+    display: none;
+  }
+
+
+.search-bar-form
+{
+    margin-top: 90px;
+    height: 50px;
+    border: solid 1px #D99512;
+}
+
+.search-bar
+{
+    height: 50px;
+    width: 85%;
+    background: none;
+    color: white;
+    border: none;
+}
+
+.search-button
+{
+    position: relative;
+    bottom: 4px;
+}
+
+.search-icon
+{
+    width: 40px;
+}
+
+.search-criteria-div
+{
+    text-align: center;
+    margin-top: 10px;
+    border: solid 1px #D99512;
+    height: 50px;
+    padding: 5px;
+}
+
+.search-criteria
+{
+    font-size: 26px;
+    display: inline;
+    position: relative;
+    top: 2px;
+}
+
+.criteria-question-button
+{
+    margin-left: 10px;
+    position: relative;
+    bottom: 5px;
+}
+
+.criteria-user-button
+{
+    margin-left: 10px;
+    position: relative;
+    bottom: 5px;
+}
+
+.criteria-question-icon
+{
+    width: 40px;
+}
+
+.criteria-user-icon
+{
+    width: 40px;
+}
+
+.userRow
+{
+    width: 100%;
+}
+
+.user
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 55px;
+    text-align: center;
+    width: 100%;
+    border: solid 1px #D99512;
+}
+
+.userButton
+{
+    color: white;
+    font-size: 24px;
+    height: 100%;
+    width: 100%;
+    background: none;
+    border: none;
+}
+
+.search-filters-div
+{
+    text-align: center;
+    margin-top: 10px;
+    border: solid 1px #D99512;
+    height: 50px;
+    padding: 5px;
+}
+
+.search-filters
+{
+    font-size: 26px;
+    display: inline;
+    position: relative;
+    top: 2px;
+}
+
+.filter-like-button
+{
+    margin-left: 10px;
+    position: relative;
+    bottom: 5px;
+}
+
+.filter-add-user-button
+{
+    margin-left: 10px;
+    position: relative;
+    bottom: 5px;
+}
+
+.filter-like-icon
+{
+    width: 40px;
+}
+
+.filter-add-user-icon
+{
+    width: 50px;
+}
+
