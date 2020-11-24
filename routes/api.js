@@ -56,7 +56,7 @@ router.post('/login', async (req, res, next) => {
         // Returns the selected values for use.
         let ret = {
             accessToken: accessToken,
-            Score: user.Score,
+            _id: user._id,
             Username: user.Username,
             Email: user.Email,
             CreatedAt: user.CreatedAt,
