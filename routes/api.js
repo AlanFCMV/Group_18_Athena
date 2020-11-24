@@ -293,7 +293,6 @@ router.post('/updatepassword', async (req, res, next) => {
     Incoming:
     {
         Name: String,
-        Public: Boolean,
         Cards: [{
             Question: String,
             Answer: String
@@ -324,7 +323,6 @@ router.post('/addset', authenticateToken, async (req, res, next) => {
     Incoming:
     {
         Name: String,
-        Public: Boolean,
         Cards: [{
             _id: ObjectId,
             Question: String,
@@ -335,7 +333,7 @@ router.post('/addset', authenticateToken, async (req, res, next) => {
 router.post('/editset', authenticateToken, async (req, res, next) => {
     let error = '';
 
-    CardSet.findOneAndUpdate({ _id: req.user.UserId }, { Name: req.body.Name, Public: req.body.Public, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
+    CardSet.findOneAndUpdate({ _id: req.user.UserId }, { Name: req.body.Name, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
         if (!cardset) {
             error = 'Cardset not found';
             return res.status(400).json({ error: error });
@@ -367,7 +365,6 @@ router.post('/deleteset', authenticateToken, async (req, res, next) => {
             }
 
             user.CreatedCardSets.splice(user.CreatedCardSets.indexOf(req.body._id), 1);
-            user.Score -= cardset.LikedBy.length;
             await user.save();
 
             return res.status(200).json({ error: error });
@@ -401,8 +398,6 @@ router.post('/like', authenticateToken, async (req, res, next) => {
                 await user.save();
                 cardset.LikedBy.push(user._id);
                 await cardset.save()
-                creator.Score++;
-                await creator.save();
 
                 return res.status(200).json({ error: error });
             });
@@ -436,8 +431,6 @@ router.post('/unlike', authenticateToken, async (req, res, next) => {
                 await user.save();
                 cardset.LikedBy.splice(cardset.LikedBy.indexOf(user._id), 1);
                 await cardset.save()
-                creator.Score--;
-                await creator.save();
 
                 return res.status(200).json({ error: error });
             });
@@ -692,26 +685,6 @@ router.post('/searchuserglobalfollowers', async (req, res) => {
     }).sort({ Followers: -1 });
 })
 
-// Search all users existing sorted by score
-/*
-    Incoming:
-    {
-        Search: String
-    }
-    Outgoing:
-        sorted-by-score list of valid results
-*/
-router.post('/searchuserglobalscore', async (req, res) => {
-    User.find({ "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err) {
-            res.send(err);
-        }
-        else {
-            res.json(result);
-        }
-    }).sort({ Score: 'descending' });
-})
-
 // Search the user's followers existing sorted by # of followers they have
 /*
     Incoming:
@@ -733,28 +706,7 @@ router.post('/searchuserfollowersfollowers', async (req, res) => {
     }).sort({ Followers: -1 });
 })
 
-// Search the user's followers existing sorted by the score they have
-/*
-    Incoming:
-    {
-        UserId : ObjectId,
-        Search: String
-    }
-    Outgoing:
-        sorted-by-score list of valid results
-*/
-router.post('/searchuserfollowersscore', async (req, res) => {
-    User.find({ "Following": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err) {
-            res.send(err);
-        }
-        else {
-            res.json(result);
-        }
-    }).sort({ Score: 'descending' });
-})
-
-// Search the user's followers existing sorted by the score they have
+// Search the user's followers existing sorted by their name
 /*
     Incoming:
     {
@@ -794,27 +746,6 @@ router.post('/searchuserfollowingfollowers', async (req, res) => {
             res.json(result);
         }
     }).sort({ Followers: -1 });
-})
-
-// Search the existing people that the user is following sorted by score they have
-/*
-    Incoming:
-    {
-        UserId : ObjectId,
-        Search: String
-    }
-    Outgoing:
-        sorted-by-score list of valid results
-*/
-router.post('/searchuserfollowingscore', async (req, res) => {
-    User.find({ "Followers": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err) {
-            res.send(err);
-        }
-        else {
-            res.json(result);
-        }
-    }).sort({ Score: 'descending' });
 })
 
 // Search the existing people that the user is following sorted alphabetically
@@ -857,7 +788,6 @@ router.post('/infouser', async (req, res, next) => {
         // Returns the selected values for use.
         let ret = {
             _id: user._id,
-            Score: user.Score,
             Username: user.Username,
             CreatedCardSets: user.CreatedCardSets,
             LikedCardSets: user.LikedCardSets,
@@ -992,7 +922,6 @@ function authenticateToken(req, res, next) {
     if (token == null) return res.sendStatus(401)
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        console.log(err)
         if (err) return res.sendStatus(403)
         req.user = user
         next()

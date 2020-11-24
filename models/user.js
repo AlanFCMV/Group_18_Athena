@@ -28,11 +28,6 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'Email field is required']
     },
-    // Total number of likes across your card sets.
-    Score: {
-        type: Number,
-        default: 0
-    },
     // Array of the user's created cardset IDs
     CreatedCardSets: {
         type: [Schema.Types.ObjectId],

@@ -11,11 +11,7 @@ const CardSetSchema = new Schema({
     Name: {
         type: String,
         required: true
-    },
-    Public: {
-        type: Boolean,
-        default: false
-    },    
+    },   
     LikedBy: {
         type: [Schema.Types.ObjectId],
         default: []
