@@ -52,7 +52,7 @@ router.post('/login', async (req, res, next) => {
             return res.status(400).json({ error: error });
         }
 
-        let payload = { UserId: user._id, Username: user.Username, Email: user.Email, }
+        let payload = { UserId: user._id, Username: user.Username, Email: user.Email }
         let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET)
 
         return res.status(200).json({accessToken: accessToken});
