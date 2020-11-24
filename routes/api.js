@@ -23,8 +23,10 @@ incoming:
 }
 outgoing:
 {
-    Everything in User except Password (check ../models/User),
-    error : String
+    accessToken:
+        UserId,
+        Username
+        Email
 }
 */
 router.post('/login', async (req, res, next) => {
@@ -50,20 +52,10 @@ router.post('/login', async (req, res, next) => {
             return res.status(400).json({ error: error });
         }
 
-        let payload = { UserId: user._id }
+        let payload = { UserId: user._id, Username: user.Username, Email: user.Email, }
         let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET)
 
-        // Returns the selected values for use.
-        let ret = {
-            accessToken: accessToken,
-            _id: user._id,
-            Username: user.Username,
-            Email: user.Email,
-            CreatedAt: user.CreatedAt,
-            error: error
-        };
-
-        return res.status(200).json({ ret });
+        return res.status(200).json({accessToken: accessToken});
     });
 
 });
