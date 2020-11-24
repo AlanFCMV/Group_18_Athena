@@ -9,10 +9,11 @@ const User = require('../models/user');
 const Token = require('../models/token');
 const CardSet = require('../models/cardset');
 
+const jwt = require('jsonwebtoken');
+
 require('dotenv').config();
 const gmail = process.env.GMAIL;
 const gpass = process.env.GMAIL_PASSWORD;
-
 
 /* Login
 incoming:
@@ -36,7 +37,7 @@ router.post('/login', async (req, res, next) => {
             error = 'Login and Password combination incorrect';
             return res.status(400).json({ error: error });
         }
-        
+
         // Ensures the found user has the correct password.
         let passwordMatch = await user.comparePassword(req.body.Password, this.Password);
         if (!passwordMatch) {
@@ -49,16 +50,15 @@ router.post('/login', async (req, res, next) => {
             return res.status(400).json({ error: error });
         }
 
+        let payload = { UserId: user._id }
+        let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET)
+
         // Returns the selected values for use.
         let ret = {
-            _id: user._id,
+            accessToken: accessToken,
             Score: user.Score,
             Username: user.Username,
             Email: user.Email,
-            CreatedCardSets: user.CreatedCardSets,
-            LikedCardSets: user.LikedCardSets,
-            Following: user.Following,
-            Followers: user.Followers,
             CreatedAt: user.CreatedAt,
             error: error
         };
@@ -216,7 +216,7 @@ router.post('/resend', async (req, res, next) => {
                 if (err) {
                     return res.status(500).send({ msg: err.message });
                 }
-                return res.status(200).send({msg: 'A verification email has been sent to the address listed above.'});
+                return res.status(200).send({ msg: 'A verification email has been sent to the address listed above.' });
             });
         });
     });
@@ -263,7 +263,7 @@ router.post('/reset', async (req, res, next) => {
                 if (err) {
                     return res.status(500).send({ msg: err.message });
                 }
-                return res.status(200).send({msg: 'A link to reset your password has been sent to ' + user.Email + '.'});
+                return res.status(200).send({ msg: 'A link to reset your password has been sent to ' + user.Email + '.' });
             });
         });
     });
@@ -283,13 +283,13 @@ router.post('/updatepassword', async (req, res, next) => {
         if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
 
         // If we found a token, find a matching user
-        User.findOne({ _id: token._userId}, function (err, user) {
+        User.findOne({ _id: token._userId }, function (err, user) {
             if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
 
             // Update the password.
             user.Password = req.body.Password;
             user.save(function (err) {
-                if (err) { return res.status(500)}
+                if (err) { return res.status(500) }
                 res.status(200).send("The account password has been reset. Please log in.");
             });
         });
@@ -300,7 +300,6 @@ router.post('/updatepassword', async (req, res, next) => {
 /*
     Incoming:
     {
-        Creator: ObjectId,
         Name: String,
         Public: Boolean,
         Cards: [{
@@ -309,16 +308,18 @@ router.post('/updatepassword', async (req, res, next) => {
         }]
     }
 */
-router.post('/addset', async (req, res, next) => {
+router.post('/addset', authenticateToken, async (req, res, next) => {
     let error = '';
 
-    User.findById(req.body.Creator, async (err, user) => {
+    User.findById(req.user.UserId, async (err, user) => {
         if (!user) {
             error = 'User not found';
             return res.status(400).json({ error: error });
         }
+        
+        let creator = {Creator:req.user.UserId}
 
-        let newSet = await CardSet.create(req.body);
+        let newSet = await CardSet.create(Object.assign({},creator,req.body));
         user.CreatedCardSets.push(newSet._id);
         await user.save();
 
@@ -330,7 +331,6 @@ router.post('/addset', async (req, res, next) => {
 /*
     Incoming:
     {
-        _id: ObjectId,
         Name: String,
         Public: Boolean,
         Cards: [{
@@ -340,10 +340,10 @@ router.post('/addset', async (req, res, next) => {
         }]
     }
 */
-router.post('/editset', async (req, res, next) => {
+router.post('/editset', authenticateToken, async (req, res, next) => {
     let error = '';
 
-    CardSet.findOneAndUpdate({ _id: req.body._id }, { Name: req.body.Name, Public: req.body.Public, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
+    CardSet.findOneAndUpdate({ _id: req.user.UserId }, { Name: req.body.Name, Public: req.body.Public, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
         if (!cardset) {
             error = 'Cardset not found';
             return res.status(400).json({ error: error });
@@ -359,7 +359,7 @@ router.post('/editset', async (req, res, next) => {
         _id: ObjectId,
     }
 */
-router.post('/deleteset', async (req, res, next) => {
+router.post('/deleteset', authenticateToken, async (req, res, next) => {
     let error = '';
 
     CardSet.findOneAndRemove({ _id: req.body._id }, { useFindAndModify: false }, async (err, cardset) => {
@@ -369,8 +369,8 @@ router.post('/deleteset', async (req, res, next) => {
         }
 
         User.findById(cardset.Creator, async (err, user) => {
-            if (!user) {
-                error = 'User not found';
+            if (user._id != req.user.UserId) {
+                error = 'Invalid User Access';
                 return res.status(400).json({ error: error });
             }
 
@@ -387,15 +387,14 @@ router.post('/deleteset', async (req, res, next) => {
 /*
     Incoming:
     {
-        UserId: ObjectId,   --This is the user liking the cardset
         SetId: ObjectId    --This is the cardset the user liked
     }
     Process of updating like: user, cardset, other user
 */
-router.post('/like', async (req, res, next) => {
+router.post('/like', authenticateToken, async (req, res, next) => {
     let error = '';
 
-    User.findById(req.body.UserId, async (err, user) => {
+    User.findById(req.user.UserId, async (err, user) => {
         if (!user) {
             error = 'User not found';
             return res.status(400).json({ error: error });
@@ -408,7 +407,7 @@ router.post('/like', async (req, res, next) => {
             User.findById(cardset.Creator, async (err, creator) => {
                 user.LikedCardSets.push(req.body.SetId);
                 await user.save();
-                cardset.LikedBy.push(req.body.UserId);
+                cardset.LikedBy.push(user._id);
                 await cardset.save()
                 creator.Score++;
                 await creator.save();
@@ -423,15 +422,14 @@ router.post('/like', async (req, res, next) => {
 /*
     Incoming:
     {
-        UserId: ObjectId,   --This is the user unliking the cardset
         SetId: ObjectId    --This is the cardset the user unliked
     }
     Process of updating unlike: user, cardset, other user
 */
-router.post('/unlike', async (req, res, next) => {
+router.post('/unlike', authenticateToken, async (req, res, next) => {
     let error = '';
 
-    User.findById(req.body.UserId, async (err, user) => {
+    User.findById(req.user.UserId, async (err, user) => {
         if (!user) {
             error = 'User not found';
             return res.status(400).json({ error: error });
@@ -444,7 +442,7 @@ router.post('/unlike', async (req, res, next) => {
             User.findById(cardset.Creator, async (err, creator) => {
                 user.LikedCardSets.splice(user.LikedCardSets.indexOf(req.body.SetId), 1);
                 await user.save();
-                cardset.LikedBy.splice(cardset.LikedBy.indexOf(req.body.UserId), 1);
+                cardset.LikedBy.splice(cardset.LikedBy.indexOf(user._id), 1);
                 await cardset.save()
                 creator.Score--;
                 await creator.save();
@@ -460,11 +458,10 @@ router.post('/unlike', async (req, res, next) => {
     Incoming:
     {
         UserId: ObjectId,   --This is the user being followed
-        FollowerId: ObjectId    --This is the user
     }
     Process of updating follow: user, follower
 */
-router.post('/follow', async (req, res, next) => {
+router.post('/follow', authenticateToken, async (req, res, next) => {
     let error = '';
 
     User.findById(req.body.UserId, async (err, user) => {
@@ -472,12 +469,12 @@ router.post('/follow', async (req, res, next) => {
             error = 'Followed User not found';
             return res.status(400).json({ error: error });
         }
-        User.findById(req.body.FollowerId, async (err, follower) => {
+        User.findById(req.user.UserId, async (err, follower) => {
             if (!follower) {
                 error = 'Follower User not found';
                 return res.status(400).json({ error: error });
             }
-            user.Followers.push(req.body.FollowerId);
+            user.Followers.push(follower._id);
             await user.save();
             follower.Following.push(req.body.UserId);
             await follower.save()
@@ -492,7 +489,6 @@ router.post('/follow', async (req, res, next) => {
     Incoming:
     {
         UserId: ObjectId,   --This is the user being unfollowed
-        FollowerId: ObjectId    --This is the user unfollowing
     }
     Process of updating unfollow: user, unfollower
 */
@@ -504,12 +500,12 @@ router.post('/unfollow', async (req, res, next) => {
             error = 'Followed User not found';
             return res.status(400).json({ error: error });
         }
-        User.findById(req.body.FollowerId, async (err, follower) => {
+        User.findById(req.user.UserId, async (err, follower) => {
             if (!follower) {
                 error = 'Follower User not found';
                 return res.status(400).json({ error: error });
             }
-            user.Followers.splice(user.Followers.indexOf(req.body.FollowerId), 1);
+            user.Followers.splice(user.Followers.indexOf(follower._id), 1);
             await user.save();
             follower.Following.splice(follower.Following.indexOf(req.body.UserId), 1);
             await follower.save()
@@ -530,12 +526,10 @@ router.post('/unfollow', async (req, res, next) => {
 */
 router.post('/searchsetglobaldate', async (req, res) => {
     CardSet.find({ "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ CreatedAt: 'descending' });
@@ -552,12 +546,10 @@ router.post('/searchsetglobaldate', async (req, res) => {
 */
 router.post('/searchsetgloballikes', async (req, res) => {
     CardSet.find({ "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ LikedBy: -1 }); // This sorts by array length
@@ -574,13 +566,11 @@ router.post('/searchsetgloballikes', async (req, res) => {
         sorted-by-date list of valid results
 */
 router.post('/searchsetuserdate', async (req, res) => {
-    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ CreatedAt: 'descending' });
@@ -597,13 +587,11 @@ router.post('/searchsetuserdate', async (req, res) => {
         sorted-by-popularity list of valid results
 */
 router.post('/searchsetuserlikes', async (req, res) => {
-    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ LikedBy: -1 }); // This sorts by array length
@@ -620,13 +608,11 @@ router.post('/searchsetuserlikes', async (req, res) => {
         sorted-by-alphabetical list of valid results
 */
 router.post('/searchsetuseralpha', async (req, res) => {
-    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Name: 'ascending' });
@@ -643,13 +629,11 @@ router.post('/searchsetuseralpha', async (req, res) => {
         sorted-by-likes list from user's liked sets
 */
 router.post('/searchsetlikedlikes', async (req, res) => {
-    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ LikedBy: -1 });
@@ -666,13 +650,11 @@ router.post('/searchsetlikedlikes', async (req, res) => {
         sorted-by-alphabetically list from user's liked sets
 */
 router.post('/searchsetlikedalpha', async (req, res) => {
-    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Name: 'ascending' });
@@ -689,12 +671,10 @@ router.post('/searchsetlikedalpha', async (req, res) => {
 */
 router.post('/searchuserglobaldate', async (req, res) => {
     User.find({ "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ CreatedAt: 'descending' });
@@ -711,12 +691,10 @@ router.post('/searchuserglobaldate', async (req, res) => {
 */
 router.post('/searchuserglobalfollowers', async (req, res) => {
     User.find({ "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Followers: -1 });
@@ -733,12 +711,10 @@ router.post('/searchuserglobalfollowers', async (req, res) => {
 */
 router.post('/searchuserglobalscore', async (req, res) => {
     User.find({ "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Score: 'descending' });
@@ -756,12 +732,10 @@ router.post('/searchuserglobalscore', async (req, res) => {
 */
 router.post('/searchuserfollowersfollowers', async (req, res) => {
     User.find({ "Following": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Followers: -1 });
@@ -779,12 +753,10 @@ router.post('/searchuserfollowersfollowers', async (req, res) => {
 */
 router.post('/searchuserfollowersscore', async (req, res) => {
     User.find({ "Following": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Score: 'descending' });
@@ -802,12 +774,10 @@ router.post('/searchuserfollowersscore', async (req, res) => {
 */
 router.post('/searchuserfollowersalpha', async (req, res) => {
     User.find({ "Following": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Username: 'ascending' });
@@ -825,12 +795,10 @@ router.post('/searchuserfollowersalpha', async (req, res) => {
 */
 router.post('/searchuserfollowingfollowers', async (req, res) => {
     User.find({ "Followers": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Followers: -1 });
@@ -848,12 +816,10 @@ router.post('/searchuserfollowingfollowers', async (req, res) => {
 */
 router.post('/searchuserfollowingscore', async (req, res) => {
     User.find({ "Followers": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Score: 'descending' });
@@ -871,12 +837,10 @@ router.post('/searchuserfollowingscore', async (req, res) => {
 */
 router.post('/searchuserfollowingalpha', async (req, res) => {
     User.find({ "Followers": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
-        if (err)
-        {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             res.json(result);
         }
     }).sort({ Username: 'ascending' });
@@ -896,7 +860,7 @@ outgoing:
 router.post('/infouser', async (req, res, next) => {
     let error = '';
 
-    User.findOne({ "_id" : req.body.UserId }, async (err, user) => {
+    User.findOne({ "_id": req.body.UserId }, async (err, user) => {
 
         // Returns the selected values for use.
         let ret = {
@@ -926,7 +890,7 @@ outgoing:
 */
 router.post('/infoset', async (req, res, next) => {
 
-    CardSet.findOne({ "_id" : req.body.SetId }, async (err, cardset) => {
+    CardSet.findOne({ "_id": req.body.SetId }, async (err, cardset) => {
 
         return res.status(200).json({ cardset });
     });
@@ -937,33 +901,28 @@ router.post('/infoset', async (req, res, next) => {
 /*
     Incoming:
     {
-        UserId: ObjectId,
         Search: String
     }
     Outgoing:
         Respective sorted-by-alphabetic list from user's set and sets they liked
 */
-router.post('/searchuserneedsalpha', async (req, res) => {
+router.post('/searchuserneedsalpha', authenticateToken, async (req, res) => {
     let obj = {};
 
-    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "Creator": req.user.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             obj = result;
         }
     }).sort({ Name: 'ascending' });
 
-    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "LikedBy": req.user.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             result = result.concat(obj);
             res.json(result);
         }
@@ -974,33 +933,28 @@ router.post('/searchuserneedsalpha', async (req, res) => {
 /*
     Incoming:
     {
-        UserId: ObjectId,
         Search: String
     }
     Outgoing:
         Respective sorted-by-date list from user's set and sets they liked
 */
-router.post('/searchuserneedsdate', async (req, res) => {
+router.post('/searchuserneedsdate', authenticateToken, async (req, res) => {
     let obj = {};
 
-    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "Creator": req.user.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             obj = result;
         }
     }).sort({ CreatedAt: 'descending' });
 
-    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "LikedBy": req.user.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             result = result.concat(obj);
             res.json(result);
         }
@@ -1011,37 +965,46 @@ router.post('/searchuserneedsdate', async (req, res) => {
 /*
     Incoming:
     {
-        UserId: ObjectId,
         Search: String
     }
     Outgoing:
         Respective sorted-by-popularity list from user's set and sets they liked
 */
-router.post('/searchuserneedslikes', async (req, res) => {
+router.post('/searchuserneedslikes', authenticateToken, async (req, res) => {
     let obj = {};
 
-    CardSet.find({ "Creator": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "Creator": req.user.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             obj = result;
         }
     }).sort({ LikedBy: -1 });
 
-    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i')}, (err, result) => {
-        if (err)
-        {
+    CardSet.find({ "LikedBy": req.user.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else
-        {
+        else {
             result = result.concat(obj);
             res.json(result);
         }
     }).sort({ LikedBy: -1 });
 })
+
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null) return res.sendStatus(401)
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        console.log(err)
+        if (err) return res.sendStatus(403)
+        req.user = user
+        next()
+    })
+}
 
 module.exports = router;
