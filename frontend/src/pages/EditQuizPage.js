@@ -4,11 +4,62 @@ import Header from '../components/Header';
 import './NewQuizPage.css';
 import HelpEditQuiz from '../components/HelpEditQuiz';
 
+
+
+
+/* ********    TO DO /FIND THE ID/ ***********
+    id = null;
+*/
+
+
+
 const EditQuizPage = () =>
 {
+    const appName = 'athena18'
+    function buildPath(route){
+    if(process.env.NODE_ENV ==='production'){
+      return 'https://' + appName + '.herokuapp.com/' + route;
+    }
+    else{
+      return 'http://localhost:5000/' + route; 
+    }
+  }
+  var id;
+  var name;
+  var cards;
+
+
+  const doEditSet = async event =>{
+      event.preventDefault();
+      cards = questions;
+      //name = document.getElementById("quiz-title").innerHTML;
+      //name = "test";
+      var obj = {_id:id, Name:name.value, Cards:cards};
+      var js = JSON.stringify(obj);
+
+        var userInfo = localStorage.getItem('user');
+        var data= JSON.parse(userInfo); 
+        
+        try{
+            const response = await fetch(buildPath('api/editset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ data.accessToken)}});
+            var res = JSON.parse(await response.text());
+
+            if(res.error){
+                document.getElementById('addError').innerHTML = res.error;
+            }
+            console.log("made it!")
+            
+
+        }
+        catch(e){
+            return;
+        }
+  }
+
+
 
     
-    var [questions, setQuestions] = useState([{quest: "", answer: ""},]);
+    var [questions, setQuestions] = useState([{Question: "", Answer: ""},]);
 
     const saveQuiz = async event => {
         event.preventDefault();
@@ -24,7 +75,7 @@ const EditQuizPage = () =>
         /* TO DO */
         /* Add {quest: "", answer: ""} to the questions array */
 
-        const item = {quest: "", answer: ""}
+        const item = {Question: "", Answer: ""}
         setQuestions(questions => [...questions, item])
     };
 
@@ -101,7 +152,7 @@ const EditQuizPage = () =>
                     <div className="col-6 column2 vh-100">
                         <form className="save-quiz-form">
                             <input type="text" className="long-inputs" id="quiz-title" placeholder="Quiz Title"/>
-                            <a className="save-quiz" onClick={saveQuiz}><img className="clickable-icon" alt="Save" src={require("../img/save.png")}/></a>
+                            <a className="save-quiz" onClick={doEditSet}><img className="clickable-icon" alt="Save" src={require("../img/save.png")}/></a>
 
                             <div className="questions-answers">
                                 <table className="add-edit-table">

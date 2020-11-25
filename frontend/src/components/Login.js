@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Login.css';
 import useTogglePassword from "../hooks/useTogglePassword";
 import { json } from 'body-parser';
+const jwt = require('jsonwebtoken');
 
 function Login() {
 
@@ -30,17 +31,23 @@ function Login() {
     {
       try{
         const response = await fetch(buildPath('api/login'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
-        console.log(response);
+        //console.log(response);
         var res = JSON.parse(await response.text());
-
+        console.log("inside")
         if(res.error)
         {
+          console.log("error")
           document.getElementById('addError').innerHTML = res.error;
         }
 
         else
         {
-          var user = {Login:res.Login, Password:res.Password};
+          //console.log("API")
+          var decoded = jwt.decode(res.accessToken);
+          var user = {accessToken:res.accessToken, UserId:decoded.UserId, Username:decoded.Username, Email:decoded.Email};
+          console.log(user)
+          
+          //console.log(decoded.UserId);
           localStorage.setItem('user', JSON.stringify(user));
           setMessage('');
           window.location.href = './Menu';

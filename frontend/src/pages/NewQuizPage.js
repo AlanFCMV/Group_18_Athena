@@ -17,17 +17,21 @@ const NewQuizPage = () =>
   }
 
   var name;
-  var question;
-  var answer;
+  var cards;
+
 
   const doAddSet = async event =>{
       event.preventDefault();
-
-      var obj = {Name:name, Question:question, Answer:answer};
+      var obj = {Name:name.value, Cards:questions};
       var js = JSON.stringify(obj);
 
+        var userInfo = localStorage.getItem('user');
+        var data= JSON.parse(userInfo);
+        console.log(data.accessToken)
+        var auth = data.accessToken;        
+        
         try{
-            const response = await fetch(buildPath('api/addset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            const response = await fetch(buildPath('api/addset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ data.accessToken)}});
             var res = JSON.parse(await response.text());
 
             if(res.error){
@@ -35,9 +39,7 @@ const NewQuizPage = () =>
             }
             console.log("made it!")
             
-            
-            var user = {Name:res.Name, Question:res.Question, Answer:res.Answer};
-            localStorage.setItem('user', JSON.stringify(user));
+
         }
         catch(e){
             return;
@@ -46,7 +48,7 @@ const NewQuizPage = () =>
 
 
     // As of right now, the values of quest and answer aren't actually used    
-    var [questions, setQuestions] = useState([{quest: "", answer: ""},]);
+    var [questions, setQuestions] = useState([{Question: "", Answer: ""},]);
 
     const saveQuiz = async event => {
         event.preventDefault();
@@ -60,7 +62,7 @@ const NewQuizPage = () =>
         event.preventDefault();
 
 
-        const item = {quest: "", answer: ""}
+        const item = {Question: "", Answer: ""}
         setQuestions(questions => [...questions, item])
     };
 
@@ -82,7 +84,9 @@ const NewQuizPage = () =>
             // }
             
             /* Remove the selected element from the questions array*/
+            console.log(questions)
             questions = questions.splice(e.target.id-1,1);
+            
             setQuestions(questions => [...questions]);
             
         }
@@ -134,7 +138,7 @@ const NewQuizPage = () =>
 
                     <div className="col-6 column2 vh-100">
                         <form className="save-quiz-form">
-                            <input type="text" className="long-inputs" id="quiz-title" placeholder="Quiz Title"/>
+                            <input type="text" className="long-inputs" id="quiz-title" placeholder="Quiz Title" ref={(c) => name = c}/>
                             <a className="save-quiz" onClick={doAddSet}><img className="clickable-icon" alt="Save" src={require("../img/save.png")}/></a>
 
                             <div className="questions-answers">

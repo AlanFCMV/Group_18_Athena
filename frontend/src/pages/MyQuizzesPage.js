@@ -6,11 +6,40 @@ import HelpViewQuiz from '../components/HelpViewQuiz';
 
 const MyQuizzesPage = () =>
 {
-    // const viewQuiz = async event => {
-    //     event.preventDefault();
+    const appName = 'athena18'
+    function buildPath(route) 
+    {
+        if (process.env.NODE_ENV === 'production') {
+            return 'https://' + appName + '.herokuapp.com/' + route;
+        }
+        else {
+            return 'http://localhost:5000/' + route;
+        }
+    }
 
-    //     window.location.href="./ViewQuiz";
-    // };
+   
+    var find = "";
+    
+    const search = async event => {
+        event.preventDefault();
+        //console.log(find)
+        var userInfo = localStorage.getItem('user');
+        var data = JSON.parse(userInfo);
+        var obj = {UserId:data.UserId, Search:find.value};
+        var js = JSON.stringify(obj);
+        const response = await fetch(buildPath('api/searchsetuseralpha'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        var res = JSON.parse(await response.text());
+        console.log(res);
+    }
+
+    
+    
+    //const viewQuiz = async event => {
+    //    event.preventDefault();
+    //    
+
+         //window.location.href="./ViewQuiz";
+     //};
 
     // delete later and use above
     const viewQuiz = async event => {
@@ -60,8 +89,8 @@ const MyQuizzesPage = () =>
                     <div className="col-3 column1 vh-100">
 
                         <form className="search-bar-form">
-                            <input type="text" className="search-bar" placeholder="Search Quiz By Title"/>
-                            <a className="search-button" ><img className="clickable-icon search-icon" alt="Search" src={require("../img/search.png")}/></a>
+                            <input type="text" className="search-bar" id= "searchBar" placeholder="Search Quiz By Title" ref={(c) => find = c}/>
+                            <a className="search-button" ><img className="clickable-icon search-icon" onClick={search} alt="Search" src={require("../img/search.png")}/></a>
                         </form>
 
                         <div className="follower-count-div">
