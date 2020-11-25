@@ -334,7 +334,7 @@ router.post('/addset', authenticateToken, async (req, res, next) => {
 router.post('/editset', authenticateToken, async (req, res, next) => {
     let error = '';
 
-    CardSet.findOneAndUpdate({ _id: req.body._id }, { Name: req.body.Name, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
+    CardSet.findOneAndUpdate({ _id: req.body._id, Creator:req.user.UserId }, { Name: req.body.Name, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
         if (!cardset) {
             error = 'Cardset not found';
             return res.status(400).json({ error: error });
