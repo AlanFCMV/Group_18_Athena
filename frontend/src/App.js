@@ -14,6 +14,7 @@ import NewQuizPage from './pages/NewQuizPage';
 import MyQuizzesPage from './pages/MyQuizzesPage';
 import GlobalSearchPage from './pages/GlobalSearchPage';
 import EditQuizPage from './pages/EditQuizPage';
+import ViewUserPage from './pages/ViewUserPage';
 
 function App() {
   return (
@@ -60,6 +61,9 @@ function App() {
         </Route>
         <Route path="/EditQuiz" exact>
           <EditQuizPage />
+        </Route>
+        <Route path="/ViewUser" exact>
+          <ViewUserPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

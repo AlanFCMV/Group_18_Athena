@@ -37,7 +37,7 @@
 
 .view-my-quizzes::-webkit-scrollbar {
     display: none;
-  }
+}
 
 
 .search-bar-form
@@ -70,5 +70,6 @@
 .follower-count-div
 {
     border: solid 1px #D99512;
-    margin-top: 20px;
+    margin-top: 10px;
+    text-align-last: center;
 }

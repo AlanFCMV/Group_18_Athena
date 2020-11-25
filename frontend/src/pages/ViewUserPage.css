@@ -1,0 +1,38 @@
+.follow-user-button-div
+{
+    margin-top: 30px;
+}
+
+.follow-user-button
+{
+    display: block;
+    text-align: center;
+}
+
+.follow-user-icon
+{
+    width: 80px;
+}
+
+.view-user-quizzes
+{
+    margin-top: 10px;
+    height: 86%;
+    overflow: auto;
+}
+
+.view-user-quizzes-table
+{
+    width: 100%;
+}
+
+.view-user-quizzes::-webkit-scrollbar {
+    display: none;
+}
+
+.global-quiz-title-div
+{
+    margin-top: 85px;
+    text-align: center;
+    border: solid 1px #D99512;
+}
