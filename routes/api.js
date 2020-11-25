@@ -301,7 +301,8 @@ router.post('/updatepassword', async (req, res, next) => {
 */
 router.post('/addset', authenticateToken, async (req, res, next) => {
     let error = '';
-
+    console.log("got here")
+    console.log(req.body)
     User.findById(req.user.UserId, async (err, user) => {
         if (!user) {
             error = 'User not found';
@@ -322,9 +323,9 @@ router.post('/addset', authenticateToken, async (req, res, next) => {
 /*
     Incoming:
     {
+        _id: ObjectId,
         Name: String,
         Cards: [{
-            _id: ObjectId,
             Question: String,
             Answer: String
         }]
@@ -333,7 +334,7 @@ router.post('/addset', authenticateToken, async (req, res, next) => {
 router.post('/editset', authenticateToken, async (req, res, next) => {
     let error = '';
 
-    CardSet.findOneAndUpdate({ _id: req.user.UserId }, { Name: req.body.Name, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
+    CardSet.findOneAndUpdate({ _id: req.body._id }, { Name: req.body.Name, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
         if (!cardset) {
             error = 'Cardset not found';
             return res.status(400).json({ error: error });
