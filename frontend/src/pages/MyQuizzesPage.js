@@ -32,6 +32,16 @@ const MyQuizzesPage = () =>
         console.log(res);
     }
 
+    const clearResults = async event => {
+        event.preventDefault();
+
+    }
+
+    const buildTable = async event => {
+        event.preventDefault();
+
+    }
+
     
     
     //const viewQuiz = async event => {

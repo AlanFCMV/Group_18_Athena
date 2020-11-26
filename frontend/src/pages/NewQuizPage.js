@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Components, useEffect, useRef, useCallback } from 'react';
 import Popup from "reactjs-popup";
 import Header from '../components/Header';
 import './NewQuizPage.css';
@@ -6,7 +6,8 @@ import HelpNewQuiz from '../components/HelpNewQuiz';
 
 const NewQuizPage = () =>
 {
-    const appName = 'athena18'
+   
+    const appName = 'athena18';
     function buildPath(route){
     if(process.env.NODE_ENV ==='production'){
       return 'https://' + appName + '.herokuapp.com/' + route;
@@ -17,12 +18,13 @@ const NewQuizPage = () =>
   }
 
   var name;
-  var cards;
-
 
   const doAddSet = async event =>{
       event.preventDefault();
-      var obj = {Name:name.value, Cards:questions};
+
+      updateCards();
+
+      var obj = {Name:name.value, Cards:cards};
       var js = JSON.stringify(obj);
 
         var userInfo = localStorage.getItem('user');
@@ -37,90 +39,140 @@ const NewQuizPage = () =>
             if(res.error){
                 document.getElementById('addError').innerHTML = res.error;
             }
-            console.log("made it!")
+            console.log("made it!");
             
 
         }
         catch(e){
             return;
         }
-  }
-
-
-    // As of right now, the values of quest and answer aren't actually used    
-    var [questions, setQuestions] = useState([{Question: "", Answer: ""},]);
-
-    const saveQuiz = async event => {
-        event.preventDefault();
-
-        /* TO DO */
 
         window.location.href="./MyQuizzes";
-    };
-
-    const addQuestion = async event => {
-        event.preventDefault();
-
-
-        const item = {Question: "", Answer: ""}
-        setQuestions(questions => [...questions, item])
-    };
-
-    function removeQuestion(e) {
-    
+  }
 
     
-        if (questions.length === 1)
+    const useStateWithPromise = (initialState) => {
+        const [state, setState] = useState(initialState);
+        const resolverRef = useRef(null);
+      
+        useEffect(() => {
+          if (resolverRef.current) {
+            resolverRef.current(state);
+            resolverRef.current = null;
+          }
+        }, [resolverRef.current, state]);
+      
+        const handleSetState = useCallback((stateAction) => {
+          setState(stateAction);
+          return new Promise(resolve => {
+            resolverRef.current = resolve;
+          });
+        }, [setState])
+      
+        return [state, handleSetState];
+      };
+
+      const [cards, setCards] = useStateWithPromise([{Question: "", Answer: ""}]);
+
+
+    const updateCards = () =>{
+        
+        for (let i = 0; i < cards.length; i++)
+        {
+            let idq = "question-id-" + i.toString();
+            let ida = "answer-id-" + i.toString();
+            let newCard = {
+                "Question" : document.getElementById(idq).value,
+                "Answer" : document.getElementById(ida).value
+            }
+            cards[i] = newCard;
+        }
+    }
+
+    const addQuestion = () =>{
+        
+        updateCards();
+        setCards([...cards, {Question: "", Answer: ""}]);
+    }
+
+    // const rem = (cards, remLoc) => {
+    //     var remCards = [];
+
+    //     for (let i=0; i<cards.length;i++)
+    //     {
+    //         let newCard = {
+    //             Question: cards[i].Question,
+    //             Answer: cards[i].Answer,
+    //         }
+    //         remCards.push(newCard);
+    //     }
+
+    //     remCards.splice(remLoc, 1);
+
+    //     return remCards;
+    // }
+
+    async function removeQuestion(remLoc) {
+        
+        if (cards.length === 1)
         {
             alert("You can't remove the only question");
+            return;
         }
-        else
+
+        updateCards();
+        console.log(remLoc);
+        var remCards=[...cards];
+        remCards.splice(remLoc, 1);
+        // setCards(cards);
+        //cards.splice(remLoc);
+        // for (let k=0; k<cards.length; k++)
+        // {
+        //     console.log(JSON.parse(JSON.stringify(cards[k])))
+        // }
+        for (let k=0; k<cards.length; k++)
         {
-            // /* Add values from text boxes to questions array */
-            // for (var j = 0; j < questions.length; j++)
-            // {
-            //     let id = "quiz-questions-" + j.toString();
-            //     questions[j].quest = document.getElementById(id).value;
-            // }
-            
-            /* Remove the selected element from the questions array*/
-            console.log(questions)
-            questions = questions.splice(e.target.id-1,1);
-            
-            setQuestions(questions => [...questions]);
-            
+            console.log(JSON.parse(JSON.stringify(cards[k])))
         }
-    };
+        // for (let k=0; k<remCards.length; k++)
+        // {
+        //     console.log(JSON.parse(JSON.stringify(remCards[k])))
+        // }
+        await setCards([]);
+        await setCards(remCards);
+        for (let k=0; k<cards.length; k++)
+        {
+            console.log(JSON.parse(JSON.stringify(cards[k])))
+        }
+        // for (let k=0; k<remCards.length; k++)
+        // {
+        //     console.log(JSON.parse(JSON.stringify(remCards[k])))
+        // }
+    }
 
-
-    var i = 0;
-
-    const renderQuestion = (question, index) =>
+    var questionNumber = 0;
+    const renderQuestion = (card, index) =>
     {
-        i++;
-        var nameq = "quiz-question-" + i.toString();
-        var namea = "quiz-answer-" + i.toString();
-        var idq = "quiz-questions-" + i.toString();
-        var ida = "quiz-answer-" + i.toString();
-        var placeholderq = "Question " + i.toString();
-        var placeholdera = "Answer " + i.toString();
-        var val = "" + i.toString();
+        console.log(card.Question);
+        questionNumber++;
+        var nameq = "quiz-question-" + questionNumber.toString();
+        var namea = "quiz-answer-" + questionNumber.toString();
+        var idq = "question-id-" + (questionNumber-1).toString();
+        var ida = "answer-id-" + (questionNumber-1).toString();
+        var placeholderq = "Question " + questionNumber.toString();
+        var placeholdera = "Answer " + questionNumber.toString();
+        var val = (questionNumber-1).toString();
+        if (questionNumber===cards.length)
+            questionNumber=0;
 
         return (
             <tr key={index}>
-                <textarea className="short-inputs" name={nameq} id={idq} placeholder={placeholderq}/>
-                <textarea className="short-inputs" name={namea} id={ida} placeholder={placeholdera}/>
-                <a className="remove-question" onClick={removeQuestion}><img id={val} className="clickable-icon" alt="Remove" src={require("../img/remove.png")}/></a>
-                
-                <script>
-                    if (i===questions.length)
-                        i=0
-                </script>
-            
+                <textarea className="short-inputs" name={nameq} id={idq} placeholder={placeholderq}>{card.Question}</textarea>
+                <textarea className="short-inputs" name={namea} id={ida} placeholder={placeholdera}>{card.Answer}</textarea>
+                <a className="remove-question" onClick={() => {removeQuestion(val);}}><img className="clickable-icon" alt="Remove" src={require("../img/remove.png")}/></a>
             </tr>
         )
     }
-
     return (
         <div>
             <div className="container-fluid vh-100">
@@ -133,7 +185,7 @@ const NewQuizPage = () =>
                             </a>
                         } position="top right">
                             <HelpNewQuiz />
-                        </Popup>
+                        </Popup>       
                     </div>
 
                     <div className="col-6 column2 vh-100">
@@ -144,7 +196,7 @@ const NewQuizPage = () =>
                             <div className="questions-answers">
                                 <table className="add-edit-table">
                                     <tbody>
-                                        {questions.map(renderQuestion)}
+                                        {cards.map(renderQuestion)}
                                         <a className="add-question" onClick={addQuestion}><img className="clickable-icon" alt="Add" src={require("../img/add.png")}/></a>
                                     </tbody>
                                 </table>
@@ -157,7 +209,7 @@ const NewQuizPage = () =>
             </div>
             <Header />
         </div>
-
+    
     );
 };
 
