@@ -5,9 +5,6 @@ import './MyQuizzesPage.css';
 import HelpViewQuiz from '../components/HelpViewQuiz';
 import { set } from 'mongoose';
 
-
-
-
 const MyQuizzesPage = () =>
 {
     const appName = 'athena18'
@@ -35,27 +32,6 @@ const MyQuizzesPage = () =>
         setQuizzes(res);
     }
 
-
-    const clearResults = async event => {
-        event.preventDefault();
-
-    }
-
-    const buildTable = async event => {
-        event.preventDefault();
-
-    }
-
-    
-    
-    //const viewQuiz = async event => {
-    //    event.preventDefault();
-    //    
-
-         //window.location.href="./ViewQuiz";
-     //};
-
-    // delete later and use above
     const viewQuiz = async event => {
         event.preventDefault();
 

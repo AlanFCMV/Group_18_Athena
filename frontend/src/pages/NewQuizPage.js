@@ -18,10 +18,6 @@ const NewQuizPage = () =>
   }
 
   var name;
-<<<<<<< HEAD
-
-=======
->>>>>>> 6a898aa5500c97bb9db52c946aad8961ce95226a
 
   const doAddSet = async event =>{
       event.preventDefault();
@@ -98,10 +94,8 @@ const NewQuizPage = () =>
         updateCards();
         setCards([...cards, {Question: "", Answer: ""}]);
     }
-
     // const rem = (cards, remLoc) => {
     //     var remCards = [];
-
     //     for (let i=0; i<cards.length;i++)
     //     {
     //         let newCard = {
@@ -110,9 +104,7 @@ const NewQuizPage = () =>
     //         }
     //         remCards.push(newCard);
     //     }
-
     //     remCards.splice(remLoc, 1);
-
     //     return remCards;
     // }
 
@@ -171,21 +163,9 @@ const NewQuizPage = () =>
 
         return (
             <tr key={index}>
-<<<<<<< HEAD
-                <textarea className="short-inputs" name={nameq} id={idq} placeholder={placeholderq} />
-                <textarea className="short-inputs" name={namea} id={ida} placeholder={placeholdera} />
-                <a className="remove-question" onClick={removeQuestion}><img id={val} className="clickable-icon" alt="Remove" src={require("../img/remove.png")}/></a>
-                
-                <script>
-                    if (i===questions.length)
-                        i=0
-                </script>
-            
-=======
                 <textarea className="short-inputs" name={nameq} id={idq} placeholder={placeholderq}>{card.Question}</textarea>
                 <textarea className="short-inputs" name={namea} id={ida} placeholder={placeholdera}>{card.Answer}</textarea>
                 <a className="remove-question" onClick={() => {removeQuestion(val);}}><img className="clickable-icon" alt="Remove" src={require("../img/remove.png")}/></a>
->>>>>>> 6a898aa5500c97bb9db52c946aad8961ce95226a
             </tr>
         )
     }
