@@ -1,6 +1,7 @@
 .myQuizRow
 {
     width: 100%;
+    text-align: center;
 }
 
 .myQuiz
@@ -9,18 +10,30 @@
     margin-bottom: 10px;
     height: 55px;
     text-align: center;
-    width: 100%;
+    width: 70%;
     border: solid 1px #D99512;
+    display:inline-block;
 }
 
 .quizButton
 {
     color: white;
-    font-size: 24px;
+    font-size: 30px;
     height: 100%;
     width: 100%;
     background: none;
     border: none;
+}
+.otherButtons{
+    color: white;
+    font-size: 24px;
+    margin-bottom:10%;
+    margin-right: 2%;
+    margin-left: 1%;
+    height: 50%;
+    width: 50%;
+    background: none;
+    border: none; 
 }
 
 .view-my-quizzes
@@ -46,6 +59,11 @@
     height: 50px;
     border: solid 1px #D99512;
 }
+.other-buttons
+{
+    display: inline-block;
+}
+
 
 .search-bar
 {

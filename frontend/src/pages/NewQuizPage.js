@@ -17,7 +17,6 @@ const NewQuizPage = () =>
   }
 
   var name;
-  var cards;
 
 
   const doAddSet = async event =>{
@@ -108,8 +107,8 @@ const NewQuizPage = () =>
 
         return (
             <tr key={index}>
-                <textarea className="short-inputs" name={nameq} id={idq} placeholder={placeholderq}/>
-                <textarea className="short-inputs" name={namea} id={ida} placeholder={placeholdera}/>
+                <textarea className="short-inputs" name={nameq} id={idq} placeholder={placeholderq} />
+                <textarea className="short-inputs" name={namea} id={ida} placeholder={placeholdera} />
                 <a className="remove-question" onClick={removeQuestion}><img id={val} className="clickable-icon" alt="Remove" src={require("../img/remove.png")}/></a>
                 
                 <script>
