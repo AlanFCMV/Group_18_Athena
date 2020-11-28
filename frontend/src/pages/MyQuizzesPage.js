@@ -3,6 +3,7 @@ import Popup from "reactjs-popup";
 import Header from '../components/Header';
 import './MyQuizzesPage.css';
 import HelpViewQuiz from '../components/HelpViewQuiz';
+import { set } from 'mongoose';
 
 const MyQuizzesPage = () =>
 {
@@ -17,77 +18,79 @@ const MyQuizzesPage = () =>
         }
     }
 
-   
     var find = "";
+    var initialQuizzes = []
     
     const search = async event => {
         event.preventDefault();
-        //console.log(find)
         var userInfo = localStorage.getItem('user');
         var data = JSON.parse(userInfo);
         var obj = {UserId:data.UserId, Search:find.value};
         var js = JSON.stringify(obj);
         const response = await fetch(buildPath('api/searchsetuseralpha'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
         var res = JSON.parse(await response.text());
-        console.log(res);
+        setQuizzes(res);
     }
 
-    const clearResults = async event => {
-        event.preventDefault();
-
-    }
-
-    const buildTable = async event => {
-        event.preventDefault();
-
-    }
-
-    
-    
-    //const viewQuiz = async event => {
-    //    event.preventDefault();
-    //    
-
-         //window.location.href="./ViewQuiz";
-     //};
-
-    // delete later and use above
     const viewQuiz = async event => {
         event.preventDefault();
-
+        
         alert("View this quiz!");
     };
 
-    var initialQuizzes = [
-        {title:"a"},
-        {title:"b"},
-        {title:"c"},
-        {title:"a"},
-        {title:"b"},
-        {title:"c"},
-        {title:"a"},
-        {title:"b"},
-        {title:"c"},
-        {title:"a"},
-        {title:"b"},
-        {title:"c"},
-        {title:"a"},
-        {title:"b"},
-        {title:"c"},
-        {title:"a"},
-        {title:"b"},
-        {title:"c"},
-    ]
+    const cardSaver = async(name) => {
+        localStorage.setItem('quizID',JSON.stringify(name));
+        window.location.href = "/EditQuiz";
+
+    }
+
+    const doDelete = async (quizID) => {
+        if(window.confirm("Are you sure you want to delete this set?")){
+            var obj = {_id:quizID}
+            var js = JSON.stringify(obj);
+
+            var userInfo = localStorage.getItem('user');
+            var blah = JSON.parse(userInfo);
+
+            try{
+                const response = await fetch(buildPath('api/deleteset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
+                var res = JSON.parse(await response.text());
+
+                if(res.error){
+                    document.getElementById('addError').innerHTML = res.error;
+                }
+                window.location.href="./Myquizzes";
+            }
+            catch(e){
+                return;
+            }
+        }
+    }
+
+   async function firstSearch(){
+        var userInfo = localStorage.getItem('user');
+        var data = JSON.parse(userInfo);
+        var obj = {UserId:data.UserId, Search:find.value};
+        var js = JSON.stringify(obj);
+        const response = await fetch(buildPath('api/searchsetuseralpha'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        var res = JSON.parse(await response.text());
+        setQuizzes(res);
+   }
+
+   window.onload = function(){firstSearch()};
 
     var [quizzes, setQuizzes] = useState(initialQuizzes);
+    
 
     const renderQuizzes = (quiz, index) =>
-    {
+    {  
         return (
             <tr className="myQuizRow" key={index}>
-                <div className="myQuiz">
-                    <button className="quizButton" onClick={viewQuiz}>{quiz.title}</button>
-                </div>
+                    <div className="myQuiz">
+                        <button className="quizButton" onClick={viewQuiz}>{quiz.Name}</button> 
+                    </div> 
+                    <a className="otherButtons" ><img className="clickable-icon edit-icon"   onClick={()=> cardSaver(quiz._id)} src={require("../img/edit.png")}/></a>
+                    <a className="otherButtons" ><img className="clickable-icon delete-icon"  onClick={() => doDelete(quiz._id)} src={require("../img/delete.png")}/></a>
             </tr>
         )
     }
@@ -97,16 +100,19 @@ const MyQuizzesPage = () =>
             <div className="container-fluid vh-100">
                 <div className="row">
                     <div className="col-3 column1 vh-100">
-
+                      
                         <form className="search-bar-form">
-                            <input type="text" className="search-bar" id= "searchBar" placeholder="Search Quiz By Title" ref={(c) => find = c}/>
-                            <a className="search-button" ><img className="clickable-icon search-icon" onClick={search} alt="Search" src={require("../img/search.png")}/></a>
+                            <input type="text" className="search-bar" id= "searchBar" onKeyUp={search} placeholder="Search Quiz By Title" ref={(c) => find = c}/>
+                            <a className="search-button" ><img className="clickable-icon search-icon"  alt="Search"  src={require("../img/search.png")}/></a>
                         </form>
 
                         <div className="follower-count-div">
                             <h3 className="follower-count">Followers: 0</h3>
+                            <p id='addError'></p>
                         </div>
-                        
+                          <div className="user-count-div">
+                            <h5>EnterNameHEre</h5>
+                        </div>
                         <Popup trigger={
                             <a className="help">
                                 <img className="help-icon" alt="Help" src={require("../img/help.png")}/>
@@ -118,7 +124,7 @@ const MyQuizzesPage = () =>
 
                     <div className="col-6 column2 vh-100">
                         <div className="view-my-quizzes">
-                            <table className="view-my-quizzes-table">
+                            <table id="quizTable" className="view-my-quizzes-table">
                                 <tbody>
                                     {quizzes.map(renderQuizzes)}
                                 </tbody>
@@ -130,8 +136,7 @@ const MyQuizzesPage = () =>
                 </div>
             </div>
             <Header />
-        </div>
-
+        </div>       
     );
 };
 

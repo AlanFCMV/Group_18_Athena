@@ -1,21 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, Components, useEffect, useRef, useCallback } from 'react';
 import Popup from "reactjs-popup";
 import Header from '../components/Header';
 import './NewQuizPage.css';
-import HelpEditQuiz from '../components/HelpEditQuiz';
-
-
-
-
-/* ********    TO DO /FIND THE ID/ ***********
-    id = null;
-*/
-
-
+import HelpEditQuiz from '../components/HelpNewQuiz';
 
 const EditQuizPage = () =>
 {
-    const appName = 'athena18'
+   
+    const appName = 'athena18';
     function buildPath(route){
     if(process.env.NODE_ENV ==='production'){
       return 'https://' + appName + '.herokuapp.com/' + route;
@@ -24,21 +16,42 @@ const EditQuizPage = () =>
       return 'http://localhost:5000/' + route; 
     }
   }
-  var id;
+
   var name;
-  var cards;
 
+  async function loadQuiz(){
+      var quizID = localStorage.getItem('quizID');
+      var data = JSON.parse(quizID);
+      var obj = {SetId:data};
+      var js = JSON.stringify(obj);
+      try{
+          const response = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+          var res = JSON.parse(await response.text());
+          document.getElementById("quiz-title").value = res.Name;
 
+         await setCards(res.Cards);
+      }
+      catch(e){
+          return;
+      }
+  }
+
+  window.onload = function(){loadQuiz()};
+/***************************************************** 
+             CHANGE THIE TO EDITSET
+******************************************************/
   const doEditSet = async event =>{
       event.preventDefault();
-      cards = questions;
-      //name = document.getElementById("quiz-title").innerHTML;
-      //name = "test";
-      var obj = {_id:id, Name:name.value, Cards:cards};
+
+      updateCards();
+      var quizID = localStorage.getItem('quizID');
+      var data = JSON.parse(quizID);
+
+      var obj = {_id:data, Name:name.value, Cards:cards};
       var js = JSON.stringify(obj);
 
         var userInfo = localStorage.getItem('user');
-        var data= JSON.parse(userInfo); 
+        var data= JSON.parse(userInfo);   
         
         try{
             const response = await fetch(buildPath('api/editset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ data.accessToken)}});
@@ -47,94 +60,124 @@ const EditQuizPage = () =>
             if(res.error){
                 document.getElementById('addError').innerHTML = res.error;
             }
-            console.log("made it!")
-            
-
         }
         catch(e){
             return;
         }
+
+       window.location.href="./MyQuizzes";
   }
 
+    const useStateWithPromise = (initialState) => {
+        const [state, setState] = useState(initialState);
+        const resolverRef = useRef(null);
+      
+        useEffect(() => {
+          if (resolverRef.current) {
+            resolverRef.current(state);
+            resolverRef.current = null;
+          }
+        }, [resolverRef.current, state]);
+      
+        const handleSetState = useCallback((stateAction) => {
+          setState(stateAction);
+          return new Promise(resolve => {
+            resolverRef.current = resolve;
+          });
+        }, [setState])
+      
+        return [state, handleSetState];
+      };
+
+      const [cards, setCards] = useStateWithPromise([]);
 
 
+    const updateCards = () =>{
+        
+        for (let i = 0; i < cards.length; i++)
+        {
+            let idq = "question-id-" + i.toString();
+            let ida = "answer-id-" + i.toString();
+            let newCard = {
+                "Question" : document.getElementById(idq).value,
+                "Answer" : document.getElementById(ida).value
+            }
+            cards[i] = newCard;
+        }
+    }
+
+    const addQuestion = () =>{
+        
+        updateCards();
+        setCards([...cards, {Question: "", Answer: ""}]);
+    }
+    // const rem = (cards, remLoc) => {
+    //     var remCards = [];
+    //     for (let i=0; i<cards.length;i++)
+    //     {
+    //         let newCard = {
+    //             Question: cards[i].Question,
+    //             Answer: cards[i].Answer,
+    //         }
+    //         remCards.push(newCard);
+    //     }
+    //     remCards.splice(remLoc, 1);
+    //     return remCards;
+    // }
     
-    var [questions, setQuestions] = useState([{Question: "", Answer: ""},]);
 
-    const saveQuiz = async event => {
-        event.preventDefault();
-
-        /* TO DO */
-
-        window.location.href="./MyQuizzes";
-    };
-
-    const addQuestion = async event => {
-        event.preventDefault();
-
-        /* TO DO */
-        /* Add {quest: "", answer: ""} to the questions array */
-
-        const item = {Question: "", Answer: ""}
-        setQuestions(questions => [...questions, item])
-    };
-
-    function removeQuestion(e) {
-    
-
-        /* TO DO */
-        /* If question.length > 1, remove the selected element from the questions array. If question.length === 1, alert the user saying "You can't remove the only question" */
-
-        if (questions.length === 1)
+    async function removeQuestion(remLoc) {
+        
+        if (cards.length === 1)
         {
             alert("You can't remove the only question");
+            return;
         }
-        else
-        {
-            // /* Add values from text boxes to questions array */
-            // for (var j = 0; j < questions.length; j++)
-            // {
-            //     let id = "quiz-questions-" + j.toString();
-            //     questions[j].quest = document.getElementById(id).value;
-            // }
-            
-            /* Remove the selected element from the questions array*/
-            questions.splice(e.target.id-1,1);
-            questions = questions
-            setQuestions(questions => [...questions]);
-            
-        }
-    };
 
+        updateCards();
+        var remCards=[...cards];
+        remCards.splice(remLoc, 1);
+        // setCards(cards);
+        //cards.splice(remLoc);
+        // for (let k=0; k<cards.length; k++)
+        // {
+        //     console.log(JSON.parse(JSON.stringify(cards[k])))
+        // }
+        // for (let k=0; k<remCards.length; k++)
+        // {
+        //     console.log(JSON.parse(JSON.stringify(remCards[k])))
+        // }
+        await setCards([]);
+        await setCards(remCards);
+    
+        // for (let k=0; k<remCards.length; k++)
+        // {
+        //     console.log(JSON.parse(JSON.stringify(remCards[k])))
+        // }
+    }
 
-    var i = 0;
-
-    const renderQuestion = (question, index) =>
+    var questionNumber = 0;
+    const renderQuestion = (card, index) =>
     {
-        i++;
-        var nameq = "quiz-question-" + i.toString();
-        var namea = "quiz-answer-" + i.toString();
-        var idq = "quiz-questions-" + i.toString();
-        var ida = "quiz-answer-" + i.toString();
-        var placeholderq = "Question " + i.toString();
-        var placeholdera = "Answer " + i.toString();
-        var val = "" + i.toString();
+        questionNumber++;
+        var nameq = "quiz-question-" + questionNumber.toString();
+        var namea = "quiz-answer-" + questionNumber.toString();
+        var idq = "question-id-" + (questionNumber-1).toString();
+        var ida = "answer-id-" + (questionNumber-1).toString();
+        var placeholderq = "Question " + questionNumber.toString();
+        var placeholdera = "Answer " + questionNumber.toString();
+        var val = (questionNumber-1).toString();
+        if (questionNumber===cards.length)
+            questionNumber=0;
 
         return (
             <tr key={index}>
-                <textarea className="short-inputs" name={nameq} id={idq} placeholder={placeholderq}/>
-                <textarea className="short-inputs" name={namea} id={ida} placeholder={placeholdera}/>
-                <a className="remove-question" onClick={removeQuestion}><img id={val} className="clickable-icon" alt="Remove" src={require("../img/remove.png")}/></a>
-                
-                <script>
-                    if (i===questions.length)
-                        i=0
-                </script>
-            
+                <textarea className="short-inputs" name={nameq} id={idq} placeholder={placeholderq}>{card.Question}</textarea>
+                <textarea className="short-inputs" name={namea} id={ida} placeholder={placeholdera}>{card.Answer}</textarea>
+                <a className="remove-question" onClick={() => {removeQuestion(val);}}><img className="clickable-icon" alt="Remove" src={require("../img/remove.png")}/></a>
             </tr>
         )
     }
-
     return (
         <div>
             <div className="container-fluid vh-100">
@@ -143,21 +186,22 @@ const EditQuizPage = () =>
                         <Popup trigger={
                             <a className="help">
                                 <img className="help-icon" alt="Help" src={require("../img/help.png")}/>
+                                <p id='addError'></p>
                             </a>
                         } position="top right">
                             <HelpEditQuiz />
-                        </Popup>
+                        </Popup>       
                     </div>
 
                     <div className="col-6 column2 vh-100">
                         <form className="save-quiz-form">
-                            <input type="text" className="long-inputs" id="quiz-title" placeholder="Quiz Title"/>
+                            <input type="text" className="long-inputs" id="quiz-title" placeholder="Quiz Title" ref={(c) => name = c}/>
                             <a className="save-quiz" onClick={doEditSet}><img className="clickable-icon" alt="Save" src={require("../img/save.png")}/></a>
 
                             <div className="questions-answers">
                                 <table className="add-edit-table">
                                     <tbody>
-                                        {questions.map(renderQuestion)}
+                                        {cards.map(renderQuestion)}
                                         <a className="add-question" onClick={addQuestion}><img className="clickable-icon" alt="Add" src={require("../img/add.png")}/></a>
                                     </tbody>
                                 </table>
@@ -170,7 +214,7 @@ const EditQuizPage = () =>
             </div>
             <Header />
         </div>
-
+    
     );
 };
 

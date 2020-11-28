@@ -50,7 +50,6 @@ const NewQuizPage = () =>
         window.location.href="./MyQuizzes";
   }
 
-    
     const useStateWithPromise = (initialState) => {
         const [state, setState] = useState(initialState);
         const resolverRef = useRef(null);
@@ -94,10 +93,8 @@ const NewQuizPage = () =>
         updateCards();
         setCards([...cards, {Question: "", Answer: ""}]);
     }
-
     // const rem = (cards, remLoc) => {
     //     var remCards = [];
-
     //     for (let i=0; i<cards.length;i++)
     //     {
     //         let newCard = {
@@ -106,9 +103,7 @@ const NewQuizPage = () =>
     //         }
     //         remCards.push(newCard);
     //     }
-
     //     remCards.splice(remLoc, 1);
-
     //     return remCards;
     // }
 
