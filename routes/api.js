@@ -109,7 +109,6 @@ router.post('/register', async (req, res, next) => {
                     if (err) { return res.status(500).send({ msg: err.message }); }
 
                     let nodemailer = require('nodemailer');
-                    console.log(gmail, gpass, req.body.Email);
                     let transporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
@@ -127,9 +126,7 @@ router.post('/register', async (req, res, next) => {
 
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
-                            console.log(error);
                         } else {
-                            console.log('Email sent: ' + info.response);
                         }
                     });
                 });
@@ -301,8 +298,6 @@ router.post('/updatepassword', async (req, res, next) => {
 */
 router.post('/addset', authenticateToken, async (req, res, next) => {
     let error = '';
-    console.log("got here")
-    console.log(req.body)
     User.findById(req.user.UserId, async (err, user) => {
         if (!user) {
             error = 'User not found';
@@ -333,7 +328,6 @@ router.post('/addset', authenticateToken, async (req, res, next) => {
 */
 router.post('/editset', authenticateToken, async (req, res, next) => {
     let error = '';
-
     CardSet.findOneAndUpdate({ _id: req.body._id, Creator:req.user.UserId }, { Name: req.body.Name, Cards: req.body.Cards }, { useFindAndModify: false }, async (err, cardset) => {
         if (!cardset) {
             error = 'Cardset not found';
@@ -798,7 +792,7 @@ router.post('/infouser', async (req, res, next) => {
             error: error
         };
 
-        return res.status(200).json({ ret });
+        return res.status(200).json(ret);
     });
 
 });
@@ -814,8 +808,7 @@ outgoing:
 router.post('/infoset', async (req, res, next) => {
 
     CardSet.findOne({ "_id": req.body.SetId }, async (err, cardset) => {
-
-        return res.status(200).json({ cardset });
+        return res.status(200).json(cardset);
     });
 
 });

@@ -50,7 +50,6 @@ const NewQuizPage = () =>
         window.location.href="./MyQuizzes";
   }
 
-    
     const useStateWithPromise = (initialState) => {
         const [state, setState] = useState(initialState);
         const resolverRef = useRef(null);

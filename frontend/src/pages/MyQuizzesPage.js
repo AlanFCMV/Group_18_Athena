@@ -34,9 +34,15 @@ const MyQuizzesPage = () =>
 
     const viewQuiz = async event => {
         event.preventDefault();
-
+        
         alert("View this quiz!");
     };
+
+    const cardSaver = async(name) => {
+        localStorage.setItem('quizTitle',JSON.stringify(name));
+        window.location.href = "/EditQuiz";
+
+    }
 
     const doDelete = async (quizID) => {
         if(window.confirm("Are you sure you want to delete this set?")){
@@ -83,7 +89,7 @@ const MyQuizzesPage = () =>
                     <div className="myQuiz">
                         <button className="quizButton" onClick={viewQuiz}>{quiz.Name}</button> 
                     </div> 
-                    <a className="otherButtons" ><img className="clickable-icon edit-icon"   src={require("../img/edit.png")}/></a>
+                    <a className="otherButtons" ><img className="clickable-icon edit-icon"   onClick={()=> cardSaver(quiz._id)} src={require("../img/edit.png")}/></a>
                     <a className="otherButtons" ><img className="clickable-icon delete-icon"  onClick={() => doDelete(quiz._id)} src={require("../img/delete.png")}/></a>
             </tr>
         )
