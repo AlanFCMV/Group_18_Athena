@@ -32,10 +32,10 @@ const MyQuizzesPage = () =>
         setQuizzes(res);
     }
 
-    const viewQuiz = async event => {
-        event.preventDefault();
+    const viewQuiz = async (name) => {
+        localStorage.setItem('quizID',JSON.stringify(name));
+        window.location.href ="/ViewUserQuiz";
         
-        alert("View this quiz!");
     };
 
     const cardSaver = async(name) => {
@@ -59,7 +59,8 @@ const MyQuizzesPage = () =>
                 if(res.error){
                     document.getElementById('addError').innerHTML = res.error;
                 }
-                window.location.href="./Myquizzes";
+                else
+                    window.location.href="./Myquizzes";
             }
             catch(e){
                 return;
@@ -87,7 +88,7 @@ const MyQuizzesPage = () =>
         return (
             <tr className="myQuizRow" key={index}>
                     <div className="myQuiz">
-                        <button className="quizButton" onClick={viewQuiz}>{quiz.Name}</button> 
+                        <button className="quizButton" onClick={() => viewQuiz(quiz._id)}>{quiz.Name}</button> 
                     </div> 
                     <a className="otherButtons" ><img className="clickable-icon edit-icon"   onClick={()=> cardSaver(quiz._id)} src={require("../img/edit.png")}/></a>
                     <a className="otherButtons" ><img className="clickable-icon delete-icon"  onClick={() => doDelete(quiz._id)} src={require("../img/delete.png")}/></a>
