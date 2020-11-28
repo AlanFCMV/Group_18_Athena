@@ -1,0 +1,96 @@
+.stats-div
+{
+    text-align: center;
+    border: solid 1px #D99512;
+    margin-top: 85px;
+}
+
+#like-count
+{
+    font-size: 24px;
+}
+
+#date-created
+{
+    font-size: 24px;
+}
+
+/* .carousel-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+} */
+
+.quiz-title
+{
+    margin-top: 85px;
+    text-align: center;
+    border: solid 1px #D99512;
+    margin-bottom: 30px;
+}
+
+.carousel-container {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    /*box-shadow: 0 24px 38px 3px rgba(217, 149, 18, 0.14),
+        0 9px 46px 8px rgba(217, 149, 18, 0.12), 0 11px 15px -7px rgba(217, 149, 18, 0.2);*/
+    border: solid 1px #D99512;
+}
+
+.carousel-container:hover {
+    cursor: pointer;
+    /*box-shadow: 0 24px 38px 3px rgba(217, 149, 18, 0.14),
+        0 9px 46px 8px rgba(217, 149, 18, 0.12), 0 11px 15px -7px rgba(217, 149, 18, 0.2);*/
+}
+
+.carousel-container p {
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+}
+
+.carousel-btn {
+    height: 22%;
+    border: none;
+    outline: none;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    padding: 1em;
+    display: flex;
+}
+
+.carousel-btn .arrow {
+    border: solid #fff;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 10px;
+    transition: transform 0.3s ease-out;
+    outline: none;
+}
+
+#right-btn {
+    margin: auto 0 auto -2em;
+}
+
+#right-btn .arrow {
+    transform: rotate(-45deg);
+}
+
+#left-btn {
+    margin: auto -2em auto 0;
+}
+
+#left-btn .arrow {
+    transform: rotate(135deg);
+}
+
+.view-user-quiz-icon
+{
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 40px;
+}

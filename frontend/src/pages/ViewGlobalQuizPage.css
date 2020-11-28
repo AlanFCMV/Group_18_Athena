@@ -1,0 +1,50 @@
+.quiz-title-user-div
+{
+    border: solid 1px transparent;
+    text-align: center;
+    margin-top: 85px;
+    margin-bottom: 15px;
+    height: 50px;
+}
+
+.quiz-title-user-div .quiz-title
+{   
+    position: relative;
+    bottom: 85px;
+    font-size: 24px;
+    width: 49%;
+    border: solid 1px #D99512;
+    height: 35px;
+}
+
+.quiz-title-user-div .quiz-user
+{
+    position: relative;
+    bottom: 150px;
+    left: 51%;
+    font-size: 24px;
+    width: 49%;
+    border: solid 1px #D99512;
+    height: 35px;
+}
+
+.quiz-title-user-div .quiz-user:hover
+{
+    cursor: pointer;
+}
+
+.view-user-like-icon
+{
+    width: 55px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.view-user-follow-icon
+{
+    width: 65px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
