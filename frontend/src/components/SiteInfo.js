@@ -7,16 +7,17 @@ function SiteInfo()
         <div class="outer-box">
             <div class="inner-box">
                 <div class="modal-content info">
-                    <p class="text-center">Welcome to <span class="afont">A</span><b class="copperfont">thena: Wisdom In Your Pocket</b></p>
-                    <p class="">
+                    <p class="text-center">Welcome to Athena: Wisdom In Your Pocket</p>
+                    <p>
                         <ul>
-                            <li>Create your own "study sets" and share them with the world</li>
-                            <li>Study your sets in "Flashcard Mode"</li>
-                            <li>Prepare for examinations in "Quiz Mode"</li>
-                            <li>And compete with your classmates in "Speed Learn Mode"</li>
+                            <li>Create your own quizzes and share them with the world</li>
+                            <li>Study your sets in "My Quizzes"</li>
+                            <li>Find other quizzes in "Global Search"</li>
+                            <li>"Like" quizzes you enjoy to easily find them later</li>
+                            <li>"Follow" other users to find the quizzes they've made</li>
+                            <li>Study in even more ways with the Athena Mobile App</li>
                         </ul>
                     </p>
-                    <p class="text-center">Embrance the power of the Greek goddess of wisdom everywhere you go with the mobile app: <a href="./app">click here to download</a></p>
                 </div>
             </div>
         </div>

@@ -30,15 +30,15 @@
     display: none;
   }
 
-.afont
+/*.afont
 {
     font-family: AthenaA;
-}
+}*/
 
-.copperfont
+/* .copperfont
 {
     font-family: "Copperplate Gothic";
-}
+} */
 
 /*@media (max-width: 1444px) 
 {
@@ -49,8 +49,8 @@
 }*/
 
 /* Add custom font for "A" in title*/
-@font-face
+/*@font-face
 {
     font-family: AthenaA;
     src: url(../fonts/Athenaa-Regular.ttf);
-}
+}*/
