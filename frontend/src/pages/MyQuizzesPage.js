@@ -39,7 +39,7 @@ const MyQuizzesPage = () =>
     };
 
     const cardSaver = async(name) => {
-        localStorage.setItem('quizTitle',JSON.stringify(name));
+        localStorage.setItem('quizID',JSON.stringify(name));
         window.location.href = "/EditQuiz";
 
     }
@@ -100,20 +100,22 @@ const MyQuizzesPage = () =>
             <div className="container-fluid vh-100">
                 <div className="row">
                     <div className="col-3 column1 vh-100">
-                    
+                      
                         <form className="search-bar-form">
                             <input type="text" className="search-bar" id= "searchBar" onKeyUp={search} placeholder="Search Quiz By Title" ref={(c) => find = c}/>
-                            <a className="search-button" ><img className="clickable-icon search-icon"  alt="Search" onClick={search} src={require("../img/search.png")}/></a>
+                            <a className="search-button" ><img className="clickable-icon search-icon"  alt="Search"  src={require("../img/search.png")}/></a>
                         </form>
 
                         <div className="follower-count-div">
                             <h3 className="follower-count">Followers: 0</h3>
                             <p id='addError'></p>
                         </div>
-                        
+                          <div className="user-count-div">
+                            <h5>EnterNameHEre</h5>
+                        </div>
                         <Popup trigger={
                             <a className="help">
-                                <img className="help-icon" onload={search} alt="Help" src={require("../img/help.png")}/>
+                                <img className="help-icon" alt="Help" src={require("../img/help.png")}/>
                             </a>
                         } position="top right">
                             <HelpViewQuiz />

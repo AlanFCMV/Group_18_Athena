@@ -20,28 +20,20 @@ const EditQuizPage = () =>
   var name;
 
   async function loadQuiz(){
-      var quizTitle = localStorage.getItem('quizTitle');
-      var data = JSON.parse(quizTitle);
+      var quizID = localStorage.getItem('quizID');
+      var data = JSON.parse(quizID);
       var obj = {SetId:data};
       var js = JSON.stringify(obj);
       try{
           const response = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
           var res = JSON.parse(await response.text());
           document.getElementById("quiz-title").value = res.Name;
-          var cardsLength = res.Cards.length;
 
-          for(let i = 0; i < cardsLength; i++){
-            let idq = "question-id-" + i.toString();
-            let ida = "answer-id-" + i.toString();
-              addQuestion();
-              document.getElementById(idq).value = res.Cards[i].Question;
-              document.getElementById(ida).value = res.Cards[i].Answer;
-          }
+         await setCards(res.Cards);
       }
       catch(e){
           return;
       }
-
   }
 
   window.onload = function(){loadQuiz()};
@@ -52,12 +44,11 @@ const EditQuizPage = () =>
       event.preventDefault();
 
       updateCards();
-      var quizTitle = localStorage.getItem('quizTitle');
-      var data = JSON.parse(quizTitle);
+      var quizID = localStorage.getItem('quizID');
+      var data = JSON.parse(quizID);
 
       var obj = {_id:data, Name:name.value, Cards:cards};
       var js = JSON.stringify(obj);
-      console.log(js)
 
         var userInfo = localStorage.getItem('user');
         var data= JSON.parse(userInfo);   
@@ -69,15 +60,12 @@ const EditQuizPage = () =>
             if(res.error){
                 document.getElementById('addError').innerHTML = res.error;
             }
-            console.log("made it!");
-            
-
         }
         catch(e){
             return;
         }
 
-        //window.location.href="./MyQuizzes";
+       window.location.href="./MyQuizzes";
   }
 
     const useStateWithPromise = (initialState) => {
@@ -101,7 +89,7 @@ const EditQuizPage = () =>
         return [state, handleSetState];
       };
 
-      const [cards, setCards] = useStateWithPromise([{Question: "", Answer: ""}]);
+      const [cards, setCards] = useStateWithPromise([]);
 
 
     const updateCards = () =>{
@@ -147,7 +135,6 @@ const EditQuizPage = () =>
         }
 
         updateCards();
-        console.log(remLoc);
         var remCards=[...cards];
         remCards.splice(remLoc, 1);
         // setCards(cards);
@@ -156,20 +143,13 @@ const EditQuizPage = () =>
         // {
         //     console.log(JSON.parse(JSON.stringify(cards[k])))
         // }
-        for (let k=0; k<cards.length; k++)
-        {
-            console.log(JSON.parse(JSON.stringify(cards[k])))
-        }
         // for (let k=0; k<remCards.length; k++)
         // {
         //     console.log(JSON.parse(JSON.stringify(remCards[k])))
         // }
         await setCards([]);
         await setCards(remCards);
-        for (let k=0; k<cards.length; k++)
-        {
-            console.log(JSON.parse(JSON.stringify(cards[k])))
-        }
+    
         // for (let k=0; k<remCards.length; k++)
         // {
         //     console.log(JSON.parse(JSON.stringify(remCards[k])))
@@ -179,7 +159,6 @@ const EditQuizPage = () =>
     var questionNumber = 0;
     const renderQuestion = (card, index) =>
     {
-        console.log(card.Question);
         questionNumber++;
         var nameq = "quiz-question-" + questionNumber.toString();
         var namea = "quiz-answer-" + questionNumber.toString();
