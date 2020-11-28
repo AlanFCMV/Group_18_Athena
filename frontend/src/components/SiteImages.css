@@ -1,4 +1,41 @@
-.SiteImages
+.site-images-img
+{
+    width: 90%;
+    border: solid 1px white;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.carousel-container-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    /* box-shadow: 0 24px 38px 3px rgba(255, 255, 255, 0.14),
+        0 9px 46px 8px rgba(255, 255, 255, 0.12), 0 11px 15px -7px rgba(255, 255, 255, 0.2); */
+}
+
+.carousel-btn-img {
+    height: 22%;
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 1em;
+    display: flex;
+    z-index: 3;
+}
+
+.carousel-btn-img .arrow {
+    border: solid #fff;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 10px;
+    transition: transform 0.3s ease-out;
+    outline: none;
+}
+
+/* .SiteImages
 {
     display: flex;
     align-items: center;
@@ -26,7 +63,7 @@
   .rec.rec-arrow:disabled
   {
     visibility: hidden;
-  }
+  } */
 
 
                      
@@ -94,8 +131,8 @@
 }*/
 
 /* Add custom font for "A" in title*/
-@font-face
+/* @font-face
 {
     font-family: AthenaA;
     src: url(../fonts/Athenaa-Regular.ttf);
-}
+} */

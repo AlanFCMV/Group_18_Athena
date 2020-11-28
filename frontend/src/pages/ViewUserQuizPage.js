@@ -72,9 +72,9 @@ const ViewUserQuizPage = () =>
                         </div>
 
                         <div className="container carousel-container align-items-center" onClick={loadQuiz}>
-                            <button id="left-btn" class="carousel-btn" onClick={moveLeft}><i class="arrow"></i></button>
+                            <button id="left-btn" className="carousel-btn" onClick={moveLeft}><i class="arrow"></i></button>
                             <p id="carousel">Sample</p>
-                            <button id="right-btn" class="carousel-btn" onClick={moveRight}><i class="arrow"></i></button>
+                            <button id="right-btn" className="carousel-btn" onClick={moveRight}><i class="arrow"></i></button>
                         </div>
                         <div className="buttons-div">
                             <a className="view-user-quiz-buttons" onClick={""}><img className="clickable-icon view-user-quiz-icon" src={require("../img/edit.png")} /></a>
