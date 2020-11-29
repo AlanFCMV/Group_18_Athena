@@ -26,6 +26,12 @@
     width: 49%;
     border: solid 1px #D99512;
     height: 35px;
+    overflow: auto;
+}
+
+.quiz-title-user-div .quiz-user::-webkit-scrollbar
+{
+    display: none;
 }
 
 .quiz-title-user-div .quiz-user:hover

@@ -712,12 +712,15 @@ router.post('/searchuserfollowersfollowers', async (req, res) => {
         sorted-by-alphabetically list of valid results
 */
 router.post('/searchuserfollowersalpha', async (req, res) => {
+    console.log(req.body);
     User.find({ "Following": req.body.UserId, "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
         if (err) {
             res.send(err);
         }
         else {
             res.json(result);
+            console.log("---------------");
+            console.log(result);
         }
     }).sort({ Username: 'ascending' });
 })

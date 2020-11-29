@@ -72,7 +72,7 @@
 }
 
 #right-btn {
-    margin: auto 0 auto -2em;
+    margin: auto -15px auto -2em;
 }
 
 #right-btn .arrow {
@@ -80,7 +80,7 @@
 }
 
 #left-btn {
-    margin: auto -2em auto 0;
+    margin: auto -2em auto -15px;
 }
 
 #left-btn .arrow {

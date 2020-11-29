@@ -73,9 +73,18 @@ const MyQuizzesPage = () =>
         var data = JSON.parse(userInfo);
         var obj = {UserId:data.UserId, Search:find.value};
         var js = JSON.stringify(obj);
-        const response = await fetch(buildPath('api/searchsetuseralpha'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        const response = await fetch(buildPath('api/searchsetuserdate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
         var res = JSON.parse(await response.text());
         setQuizzes(res);
+
+        obj = {UserId:data.UserId, Search:""};
+        js = JSON.stringify(obj);
+        const followersResponse = await fetch(buildPath('api/searchuserfollowersalpha'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        var followersRes = JSON.parse(await followersResponse.text());
+        console.log(followersRes);
+        document.getElementById("follower-count").innerHTML = "Followers: " + (followersRes.length).toString();
+
+        document.getElementById("user-count").innerHTML = data.Username;
    }
 
    window.onload = function(){firstSearch()};
@@ -106,14 +115,16 @@ const MyQuizzesPage = () =>
                             <input type="text" className="search-bar" id= "searchBar" onKeyUp={search} placeholder="Search Quiz By Title" ref={(c) => find = c}/>
                             <a className="search-button" ><img className="clickable-icon search-icon"  alt="Search"  src={require("../img/search.png")}/></a>
                         </form>
+                        
+                        <div className="user-count-div">
+                            <h3 id='user-count'>EnterNameHere</h3>
+                        </div>
 
                         <div className="follower-count-div">
-                            <h3 className="follower-count">Followers: 0</h3>
+                            <h3 className="follower-count" id="follower-count">Followers: 0</h3>
                             <p id='addError'></p>
                         </div>
-                          <div className="user-count-div">
-                            <h5>EnterNameHEre</h5>
-                        </div>
+                        
                         <Popup trigger={
                             <a className="help">
                                 <img className="help-icon" alt="Help" src={require("../img/help.png")}/>

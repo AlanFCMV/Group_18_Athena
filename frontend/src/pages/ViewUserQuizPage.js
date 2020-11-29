@@ -22,8 +22,7 @@ const ViewUserQuizPage = () =>
         p = document.getElementById('carousel');
         p.innerHTML = (questionOrAnswer === 0) ? cards[position].Question : cards[position].Answer;
     }
-    // Question: 0
-    // Answer: 1
+   
     const useStateWithPromise = (initialState) => {
         const [state, setState] = useState(initialState);
         const resolverRef = useRef(null);
@@ -139,8 +138,8 @@ const ViewUserQuizPage = () =>
 
                 
                         <div className="stats-div">
-                            <h3 id="like-count">Likes: 0</h3>
-                            <h3 id="date-created"></h3>
+                            <h3 id="like-count">Likes: </h3>
+                            <h3 id="date-created">Date Created: </h3>
                             <p id='addError'></p>
                         </div>
                         
