@@ -25,6 +25,7 @@ const GlobalSearchPage = () =>
         const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
         var res = JSON.parse(await response.text());
 
+       
         var newQuizzesState = [];
 
         for (let i = 0; i < res.length; i++)
@@ -37,6 +38,10 @@ const GlobalSearchPage = () =>
                 const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
                 var idRes = JSON.parse(await idResponse.text());
                 newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username, Id:res[i]._id, userID:idRes._id});
+<<<<<<< HEAD
+=======
+               
+>>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
             }
 
             catch(e) {
@@ -47,6 +52,29 @@ const GlobalSearchPage = () =>
     
         setQuizzes(newQuizzesState);
     }
+    const userSearch= async event =>{
+        event.preventDefault();
+        
+        var userstate = [];
+
+        var obj2={Search:find.value};
+        var js2 = JSON.stringify(obj2);
+        const response2 = await fetch(buildPath('api/searchuserglobaldate'), {method:'POST', body:js2,headers:{'Content-Type': 'application/json'}});
+        var res2 = JSON.parse(await response2.text());
+        for(var i = 0; i < res2.length; i++){
+            
+            try{
+                const response3 = await fetch(buildPath('api/searchuserglobaldate'), {method:'POST', body:js2,headers:{'Content-Type': 'application/json'}});
+                var res3 = JSON.parse(await response3.text());
+                
+                userstate.push({UserName:res3[i].Username, id:res3[i]._id})
+            }
+            catch(e){
+                return
+            }
+        }
+        setUsers(userstate);
+    }
 
     async function firstSearch(){
         var obj = {Search:find.value};
@@ -54,6 +82,26 @@ const GlobalSearchPage = () =>
         const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
         var res = JSON.parse(await response.text());
 
+       
+        var userstate = [];
+
+        var obj2={Search:find.value};
+        var js2 = JSON.stringify(obj2);
+        const response2 = await fetch(buildPath('api/searchuserglobaldate'), {method:'POST', body:js2,headers:{'Content-Type': 'application/json'}});
+        var res2 = JSON.parse(await response2.text());
+        for(var i = 0; i < res2.length; i++){
+            
+            try{
+                const response3 = await fetch(buildPath('api/searchuserglobaldate'), {method:'POST', body:js2,headers:{'Content-Type': 'application/json'}});
+                var res3 = JSON.parse(await response3.text());
+                userstate.push({UserName:res3[i].Username, id:res3[i]._id})
+            }
+            catch(e){
+                return
+            }
+        }
+        setUsers(userstate);
+        
         var newQuizzesState = [];
 
         for (let i = 0; i < res.length; i++)
@@ -66,6 +114,10 @@ const GlobalSearchPage = () =>
                 const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
                 var idRes = JSON.parse(await idResponse.text());
                 newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username, Id:res[i]._id, userID:idRes._id});
+<<<<<<< HEAD
+=======
+               
+>>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
             }
 
             catch(e) {
@@ -108,16 +160,37 @@ const GlobalSearchPage = () =>
     const userCardSaver = async(name) => {
         localStorage.setItem('quizCreator',JSON.stringify(name));
         window.location.href = "/viewuser";
+<<<<<<< HEAD
 
     }
     
+=======
+
+    }
+    //LIKEDSEARCH
+    async function likedSearch(){
+        var userInfo = localStorage.getItem('user');
+        var data = JSON.parse(user);
+        var obj = {UserId:data._id, Search:find.value};
+        var js = JSON.stringify(obj);
+        try{
+            const response = await fetch(buildPath('api/searchsetlikedlikes'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await response.text());
+
+        }
+        catch(e){
+            return;
+        }
+
+    }
+>>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
     var [quizzes, setQuizzes] = useState([]);
     
     var quizNumber = -1;
     const renderQuizzes = (quiz, index) =>
     {
         quizNumber++;
-        var idNumber = "quizUser-" + quizNumber.toString();
+        //var idNumber = "quizUser-" + quizNumber.toString();
         if(quizNumber === quizzes.length){
             quizNumber = -1;
         }
@@ -159,7 +232,7 @@ const GlobalSearchPage = () =>
         return (
             <tr className="userRow" key={index}>
                 <div className="user">
-                    <button className="userButton"  onClick={viewUser}>{user.name}</button>
+                    <button className="userButton"  onClick={()=>userCardSaver(user.id)}>{user.UserName}</button>
                 </div>
             </tr>
         )
@@ -225,7 +298,7 @@ const GlobalSearchPage = () =>
                         <div className="col-3 column1 vh-100">
 
                             <form className="search-bar-form">
-                                <input type="text" className="search-bar" placeholder="Search Quiz By Title"/>
+                                <input type="text" className="search-bar" onKeyUp={userSearch} placeholder="Creator name" ref={(c) => find = c}/>
                                 <a className="search-button" ><img className="clickable-icon search-icon" alt="Search" src={require("../img/search.png")}/></a>
                             </form>
 

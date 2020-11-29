@@ -27,7 +27,7 @@ const MyQuizzesPage = () =>
         var data = JSON.parse(userInfo);
         var obj = {UserId:data.UserId, Search:find.value};
         var js = JSON.stringify(obj);
-        const response = await fetch(buildPath('api/searchsetuseralpha'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        const response = await fetch(buildPath('api/searchsetuserdate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
         var res = JSON.parse(await response.text());
         setQuizzes(res);
     }
