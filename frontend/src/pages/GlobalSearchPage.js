@@ -24,7 +24,29 @@ const GlobalSearchPage = () =>
         var js = JSON.stringify(obj);
         const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
         var res = JSON.parse(await response.text());
-        setQuizzes(res);
+        var quizNames = res;
+
+        var newQuizzesState = [];
+
+        for (let i = 0; i < res.length; i++)
+        {
+            var data = res[i].Creator
+            obj = {UserId:data};
+            js = JSON.stringify(obj);
+   
+            try {
+                const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+                var idRes = JSON.parse(await idResponse.text());
+                newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username});
+            }
+
+            catch(e) {
+                return;
+            }
+        }
+
+    
+        setQuizzes(newQuizzesState);
     }
 
     async function firstSearch(){
@@ -33,19 +55,28 @@ const GlobalSearchPage = () =>
         const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
         var res = JSON.parse(await response.text());
         var quizNames = res;
-        setQuizzes(res);
 
-        /*
-        for(var i = 0; i < res.length; i++){
-            //console.log(res[i].Creator) 
-            var obj2 = {UserId:res[i].Creator};
-            var js2 = JSON.stringify(obj2);
-            const response2 = await fetch(buildPath('api/infouser'), {method:'POST', body:js2,headers:{'Content-Type': 'application/json'}});
-            var res2 = JSON.parse(await response2.text());
-            console.log(res2.Username)
-            document.getElementById(`quizUser-${i.toString()}`).innerHTML = res2.Username;
+        var newQuizzesState = [];
+
+        for (let i = 0; i < res.length; i++)
+        {
+            var data = res[i].Creator
+            obj = {UserId:data};
+            js = JSON.stringify(obj);
+   
+            try {
+                const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+                var idRes = JSON.parse(await idResponse.text());
+                newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username});
+            }
+
+            catch(e) {
+                return;
+            }
         }
-            //document.getElementById('quizUser').innerHTML = res2.Username;*/
+
+    
+        setQuizzes(newQuizzesState);
     }
 
     window.onload = function(){firstSearch()};
@@ -72,28 +103,8 @@ const GlobalSearchPage = () =>
     const [searchQuizzesFollowing, setSearchQuizzesFollowing] = useState(0);
     const [searchUsersFollowing, setSearchUsersFollowing] = useState(0);
 
-    var initialQuizzes = [
-        {title:"a", user: "creator name"},
-        {title:"b", user: "creator name"},
-        {title:"c", user: "creator name"},
-        {title:"a", user: "creator name"},
-        {title:"b", user: "creator name"},
-        {title:"c", user: "creator name"},
-        {title:"a", user: "creator name"},
-        {title:"b", user: "creator name"},
-        {title:"c", user: "creator name"},
-        {title:"a", user: "creator name"},
-        {title:"b", user: "creator name"},
-        {title:"c", user: "creator name"},
-        {title:"a", user: "creator name"},
-        {title:"b", user: "creator name"},
-        {title:"c", user: "creator name"},
-        {title:"a", user: "creator name"},
-        {title:"b", user: "creator name"},
-        {title:"c", user: "creator name"},
-    ]
 
-    var [quizzes, setQuizzes] = useState(initialQuizzes);
+    var [quizzes, setQuizzes] = useState([]);
     
     var quizNumber = -1;
     const renderQuizzes = (quiz, index) =>
@@ -107,7 +118,7 @@ const GlobalSearchPage = () =>
             <tr className="userQuizRow" key={index}>
                 <div className="userQuiz">
                     <button className="userquizButton" onClick={viewQuiz}>{quiz.Name}</button><br />
-                    <button className="quizcreatorButton" id="quizUser" onClick={viewUser}>{quiz.user}</button>
+                    <button className="quizcreatorButton" id="quizUser" onClick={viewUser}>{quiz.Creator}</button>
                 </div>
             </tr>
         )
@@ -156,7 +167,7 @@ const GlobalSearchPage = () =>
                         <div className="col-3 column1 vh-100">
 
                             <form className="search-bar-form">
-                                <input type="text" className="search-bar" onKeyUp={search} placeholder="Search Quiz By Title"/>
+                                <input type="text" className="search-bar" onKeyUp={search} placeholder="Search Quiz By Title" ref={(c) => find = c}/>
                                 <a className="search-button" ><img className="clickable-icon search-icon" alt="Search" src={require("../img/search.png")}/></a>
                             </form>
 
