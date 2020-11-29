@@ -26,6 +26,7 @@ const MyQuizzesPage = () =>
         const response = await fetch(buildPath('api/searchsetuserdate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
         var res = JSON.parse(await response.text());
         setQuizzes(res);
+       
     }
 
     async function firstSearch(){
@@ -37,18 +38,19 @@ const MyQuizzesPage = () =>
         var res = JSON.parse(await response.text());
         setQuizzes(res);
         var newobj = {UserId:data};
-        js = JSON.stringify(obj);
+        js = JSON.stringify(newobj);
         const response2 = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
         var res2 = JSON.parse(await response2.text());
         document.getElementById('creatorName').innerHTML = res2.Username;
         
+
+        
     }
 
     window.onload = function(){firstSearch()};
-    const viewQuiz = async event => {
-        event.preventDefault();
-
-        alert("View this quiz!");
+    const viewQuiz = async (name) => {
+        localStorage.setItem('quizID',JSON.stringify(name));
+        window.location.href ="/ViewGlobalQuiz";
     };
 
     const [searchQuizLiked, setSearchQuizLiked] = useState(0);
@@ -84,7 +86,7 @@ const MyQuizzesPage = () =>
         return (
             <tr className="myQuizRow" key={index}>
                 <div className="myQuiz">
-                    <button className="quizButton" onClick={viewQuiz}>{quiz.Name}</button>
+                    <button className="quizButton" onClick={() => viewQuiz(quiz._id)}>{quiz.Name}</button>
                 </div>
             </tr>
         )
@@ -113,7 +115,7 @@ const MyQuizzesPage = () =>
                         
 
                         <div className="follower-count-div">
-                            <h3 className="follower-count">Followers: 0</h3>
+                            <h3 className="follower-count"id="followCount">Followers: 0</h3>
                         </div>
                         
                         <Popup trigger={
@@ -127,7 +129,7 @@ const MyQuizzesPage = () =>
 
                     <div className="col-6 column2 vh-100">
                         <div className="global-quiz-title-div">
-                            <h3 className="global-quiz-title"id="creatorName">Quiz Title</h3>
+                            <h3 className="global-quiz-title"id="creatorName"></h3>
                         </div>
 
                         <div className="view-user-quizzes">
