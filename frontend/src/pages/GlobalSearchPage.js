@@ -118,7 +118,7 @@ const GlobalSearchPage = () =>
             <tr className="userQuizRow" key={index}>
                 <div className="userQuiz">
                     <button className="userquizButton" onClick={viewQuiz}>{quiz.Name}</button><br />
-                    <button className="quizcreatorButton" id="quizUser" onClick={viewUser}>{quiz.Creator}</button>
+                    <button className="quizcreatorButton" id="quizUser" onClick={viewUser}>Created by: {quiz.Creator}</button>
                 </div>
             </tr>
         )

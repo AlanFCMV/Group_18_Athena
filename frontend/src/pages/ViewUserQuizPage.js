@@ -64,9 +64,10 @@ const ViewUserQuizPage = () =>
             await setCards([]);
             await setCards(res.Cards);
             var time = res.CreatedAt.substring(0,10);
-            console.log(time)
+            console.log(res.LikedBy.length)
             document.getElementById('carousel').innerHTML = res.Cards[0].Question;
             document.getElementById('date-created').innerHTML = "Date Created: " + time;
+            document.getElementById('like-count').innerHTML = "Likes: " + res.LikedBy.length;
             p = document.getElementById('carousel');
             p.innerHTML = (questionOrAnswer === 0) ? cards[position].Question : cards[position].Answer;
         }

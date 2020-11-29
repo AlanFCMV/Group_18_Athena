@@ -67,6 +67,7 @@ const ViewUserQuizPage = () =>
             // console.log(time)
             document.getElementById('carousel').innerHTML = res.Cards[0].Question;
             document.getElementById('date-created').innerHTML = "Date Created: " + time;
+            document.getElementById('like-count').innerHTML = "Likes: " + res.LikedBy.length;
         }
         catch(e){
             console.log("error");
@@ -152,6 +153,50 @@ const ViewUserQuizPage = () =>
         window.location = "./ViewUser";
     }
 
+    async function likeQuiz(){
+        var quizId = localStorage.getItem('quizID');
+        var data = JSON.parse(quizId);
+        var obj = {SetId:data};
+        var js = JSON.stringify(obj);
+
+        var userInfo = localStorage.getItem('user');
+        var blah = JSON.parse(userInfo);
+        try{
+            const response = await fetch(buildPath('api/like'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
+            var res = JSON.parse(await response.text());
+            if(res.error){
+
+            }
+            else{
+                setIsLiked(res);
+            }
+        }
+        catch(e){
+            return;
+        }
+    }
+    async function unLikeQuiz(){
+        var quizId = localStorage.getItem('quizID');
+        var data = JSON.parse(quizId);
+        var obj = {SetId:data};
+        var js = JSON.stringify(obj);
+
+        var userInfo = localStorage.getItem('user');
+        var blah = JSON.parse(userInfo);
+        try{
+            const response = await fetch(buildPath('api/unlike'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
+            var res = JSON.parse(await response.text());
+            if(res.error){
+
+            }
+            else{
+                setIsLiked(res);
+            }
+        }
+        catch(e){
+            return;
+        }
+    }
     const [isLiked, setIsLiked] = useState(0);
     const [isFollowing, setIsFollowing] = useState(0);
 
@@ -181,14 +226,14 @@ const ViewUserQuizPage = () =>
                             <h3 className="quiz-title" id="quiz-title">Quiz Title</h3>
                             <h3 className="quiz-user" id="quiz-user" onClick={goToUsersPage}>By User Name</h3>
                         </div>
-
+                        
                         <div className="container carousel-container align-items-center" onClick={flipCards}>
                             <button id="left-btn" class="carousel-btn" onClick={moveLeft}><i class="arrow"></i></button>
                             <p id="carousel"></p>
                             <button id="right-btn" class="carousel-btn" onClick={moveRight}><i class="arrow"></i></button>
                         </div>
                         <div className="buttons-div">
-                            <a className="view-user-quiz-buttons" onClick={() => {setIsLiked(1-isLiked)}}><img className="clickable-icon view-user-like-icon" src={isLiked ? require("../img/addlikefull.png") : require("../img/addlikeempty.png")} /></a>
+                            <a className="view-user-quiz-buttons" onClick={() => {setIsLiked(1-isLiked); isLiked ? likeQuiz() : unLikeQuiz()}}><img className="clickable-icon view-user-like-icon" src={isLiked ? require("../img/addlikefull.png") : require("../img/addlikeempty.png")} /></a>
                             {/* <a className="view-user-quiz-buttons" onClick={loadQuiz}><img className="clickable-icon view-user-quiz-icon" src={require("../img/flip.png")} /></a> */}
                             <a className="view-user-quiz-buttons" onClick={()=> {setIsFollowing(1-isFollowing)}}><img className="clickable-icon view-user-follow-icon" src={isFollowing ? require("../img/adduserfull.png") : require("../img/adduserempty.png")} /></a>
                         </div>
