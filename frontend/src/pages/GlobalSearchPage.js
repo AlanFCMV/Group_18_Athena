@@ -17,13 +17,13 @@ const GlobalSearchPage = () =>
         }
     }
     var find ="";
+
     const search = async event => {
         event.preventDefault();
         var obj = {Search:find.value};
         var js = JSON.stringify(obj);
         const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
         var res = JSON.parse(await response.text());
-        
         setQuizzes(res);
     }
 
@@ -32,7 +32,20 @@ const GlobalSearchPage = () =>
         var js = JSON.stringify(obj);
         const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
         var res = JSON.parse(await response.text());
+        var quizNames = res;
         setQuizzes(res);
+
+        /*
+        for(var i = 0; i < res.length; i++){
+            //console.log(res[i].Creator) 
+            var obj2 = {UserId:res[i].Creator};
+            var js2 = JSON.stringify(obj2);
+            const response2 = await fetch(buildPath('api/infouser'), {method:'POST', body:js2,headers:{'Content-Type': 'application/json'}});
+            var res2 = JSON.parse(await response2.text());
+            console.log(res2.Username)
+            document.getElementById(`quizUser-${i.toString()}`).innerHTML = res2.Username;
+        }
+            //document.getElementById('quizUser').innerHTML = res2.Username;*/
     }
 
     window.onload = function(){firstSearch()};
@@ -81,14 +94,20 @@ const GlobalSearchPage = () =>
     ]
 
     var [quizzes, setQuizzes] = useState(initialQuizzes);
-
+    
+    var quizNumber = -1;
     const renderQuizzes = (quiz, index) =>
     {
+        quizNumber++;
+        var idNumber = "quizUser-" + quizNumber.toString();
+        if(quizNumber === quizzes.length){
+            quizNumber = -1;
+        }
         return (
             <tr className="userQuizRow" key={index}>
                 <div className="userQuiz">
                     <button className="userquizButton" onClick={viewQuiz}>{quiz.Name}</button><br />
-                    <button className="quizcreatorButton" onClick={viewUser}>By {quiz.user}</button>
+                    <button className="quizcreatorButton" id="quizUser" onClick={viewUser}>{quiz.user}</button>
                 </div>
             </tr>
         )
@@ -122,7 +141,7 @@ const GlobalSearchPage = () =>
         return (
             <tr className="userRow" key={index}>
                 <div className="user">
-                    <button className="userButton" onClick={viewUser}>{user.name}</button>
+                    <button className="userButton"  onClick={viewUser}>{user.name}</button>
                 </div>
             </tr>
         )
