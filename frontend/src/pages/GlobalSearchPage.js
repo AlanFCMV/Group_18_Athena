@@ -6,35 +6,42 @@ import HelpGlobal from '../components/HelpGlobal';
 
 const GlobalSearchPage = () =>
 {
-    // constructor(props)
-    // {
-    //     super(props);
+    const appName = 'athena18'
+    function buildPath(route) 
+    {
+        if (process.env.NODE_ENV === 'production') {
+            return 'https://' + appName + '.herokuapp.com/' + route;
+        }
+        else {
+            return 'http://localhost:5000/' + route;
+        }
+    }
+    var find ="";
+    const search = async event => {
+        event.preventDefault();
+        var obj = {Search:find.value};
+        var js = JSON.stringify(obj);
+        const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
+        var res = JSON.parse(await response.text());
+        
+        setQuizzes(res);
+    }
 
-    //     this.state = {
+    async function firstSearch(){
+        var obj = {Search:find.value};
+        var js = JSON.stringify(obj);
+        const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
+        var res = JSON.parse(await response.text());
+        setQuizzes(res);
+    }
 
-    //     }
-    // }
-
-
-    // const viewQuiz = async event => {
-    //     event.preventDefault();
-
-    //     window.location.href="./ViewQuiz";
-    // };
-
+    window.onload = function(){firstSearch()};
     // delete later and use above
     const viewQuiz = async event => {
         event.preventDefault();
 
         alert("View this quiz!");
     };
-
-
-    // const viewUser = async event => {
-    //     event.preventDefault();
-
-    //     window.location.href="./ViewUser";
-    // };
 
     // delete later and use above
     const viewUser = async event => {
@@ -80,7 +87,7 @@ const GlobalSearchPage = () =>
         return (
             <tr className="userQuizRow" key={index}>
                 <div className="userQuiz">
-                    <button className="userquizButton" onClick={viewQuiz}>{quiz.title}</button><br />
+                    <button className="userquizButton" onClick={viewQuiz}>{quiz.Name}</button><br />
                     <button className="quizcreatorButton" onClick={viewUser}>By {quiz.user}</button>
                 </div>
             </tr>
@@ -130,7 +137,7 @@ const GlobalSearchPage = () =>
                         <div className="col-3 column1 vh-100">
 
                             <form className="search-bar-form">
-                                <input type="text" className="search-bar" placeholder="Search Quiz By Title"/>
+                                <input type="text" className="search-bar" onKeyUp={search} placeholder="Search Quiz By Title"/>
                                 <a className="search-button" ><img className="clickable-icon search-icon" alt="Search" src={require("../img/search.png")}/></a>
                             </form>
 
