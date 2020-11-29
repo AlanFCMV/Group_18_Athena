@@ -163,7 +163,7 @@ const GlobalSearchPage = () =>
         var obj = {UserId:data._id, Search:find.value};
         var js = JSON.stringify(obj);
         try{
-            const response = await fetch(buildPath('api/searchsetlikedlikes'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            const response = await fetch(buildPath('api/searchsetlikedate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
 
         }

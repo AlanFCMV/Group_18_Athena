@@ -46,15 +46,15 @@ const ViewUserQuizPage = () =>
 
     var questionOrAnswer = 0;
     const [cards, setCards] = useStateWithPromise([]); 
+    
+    const [isFollowing, setIsFollowing] = useState(0);
     var position = 0;
     var p;
 
     window.onload = function(){loadQuiz()};
 
     async function loadQuiz()
-    {   
-        var quizID = localStorage.getItem('quizID');
-        console.log(quizID)
+    {   var quizID = localStorage.getItem('quizID');
         var data = JSON.parse(quizID);
         var obj = {SetId:data};
         var js = JSON.stringify(obj);
@@ -77,55 +77,41 @@ const ViewUserQuizPage = () =>
         }
 
         data = res.Creator;
-        console.log(data)
         obj = {UserId:data};
         js = JSON.stringify(obj);
-        console.log(js);
         try {
-            console.log("entered try");
             const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
-            console.log(idResponse);
             var idRes = JSON.parse(await idResponse.text());
-            console.log(idRes);
             document.getElementById("quiz-user").innerHTML = idRes.Username;
         }
 
         catch(e) {
             return;
         }
-       
-    }
 
-    const doDelete = async () => {
-        if(window.confirm("Are you sure you want to delete this set?")){
-            var quizID = localStorage.getItem('quizID');
-            var newId = JSON.parse(quizID)
-            var obj = {_id:newId}
-            var js = JSON.stringify(obj);
-
-            var userInfo = localStorage.getItem('user');
-            var blah = JSON.parse(userInfo);
-
-            try{
-                const response = await fetch(buildPath('api/deleteset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
-                var res = JSON.parse(await response.text());
-
-                if(res.error){
-                    document.getElementById('addError').innerHTML = res.error;
-                }
-                else
-                    window.location.href="./Myquizzes";
-            }
-            catch(e){
-                return;
-            }
+        var initialLikedState = await isQuizLiked();
+        if(initialLikedState)
+        {
+            console.log("initializing like button to be full");
+            document.getElementById("like-button-to-toggle").src = require("../img/addlikefull.png");
         }
-    }
-    const cardSaver = async ()=>{
-        var quizID = localStorage.getItem('quizID');
-        var newId = JSON.parse(quizID)
-        localStorage.setItem('quizID',JSON.stringify(newId));
-        window.location.href = "/EditQuiz";
+        else
+        {
+            console.log("initializing like button to be empty");
+            document.getElementById("like-button-to-toggle").src = require("../img/addlikeempty.png");
+        }
+
+        var initialFollowState = await isUserFollowing();
+        if(initialFollowState)
+        {
+            console.log("initializing follow button to be full");
+            document.getElementById("follow-button-to-toggle").src = require("../img/adduserfull.png");
+        }
+        else
+        {
+            console.log("initializing follow button to be empty");
+            document.getElementById("follow-button-to-toggle").src = require("../img/adduserempty.png");
+        }   
     }
 
     const moveRight = () => {
@@ -155,6 +141,55 @@ const ViewUserQuizPage = () =>
         window.location = "./ViewUser";
     }
 
+    async function isQuizLiked()
+    {
+        var isQuizLiked = 0;
+        var quizID = localStorage.getItem('quizID');
+        var data = JSON.parse(quizID);
+        var obj = {SetId:data};
+        var js = JSON.stringify(obj);
+        var user = localStorage.getItem('user');
+        var userdata = JSON.parse(user);
+        var userobj = userdata.UserId;
+        try{
+            const response = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await response.text());
+
+            for (let i = 0; i < res.LikedBy.length; i++)
+            {   
+                if (res.LikedBy[i] === userobj)
+                {
+                    isQuizLiked = 1;
+                    break;
+                }
+            }
+        }
+        catch(e){
+            console.log("error");
+            return;
+        }
+
+        console.log("isQuizLiked: " + isQuizLiked);
+        return isQuizLiked;
+    }
+
+    async function updateLikes()
+    {
+        var quizID = localStorage.getItem('quizID');
+        var data = JSON.parse(quizID);
+        var obj = {SetId:data};
+        var js = JSON.stringify(obj);
+        try{
+            const response = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await response.text());
+            document.getElementById('like-count').innerHTML = "Likes: " + res.LikedBy.length;
+        }
+        catch(e){
+            console.log("error");
+            return;
+        }
+    }
+
     async function likeQuiz(){
         var quizId = localStorage.getItem('quizID');
         var data = JSON.parse(quizId);
@@ -166,12 +201,7 @@ const ViewUserQuizPage = () =>
         try{
             const response = await fetch(buildPath('api/like'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
             var res = JSON.parse(await response.text());
-            if(res.error){
-
-            }
-            else{
-                setIsLiked(res);
-            }
+            updateLikes();
         }
         catch(e){
             return;
@@ -188,19 +218,147 @@ const ViewUserQuizPage = () =>
         try{
             const response = await fetch(buildPath('api/unlike'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
             var res = JSON.parse(await response.text());
-            if(res.error){
-
-            }
-            else{
-                setIsLiked(res);
-            }
+            updateLikes();
         }
         catch(e){
             return;
         }
     }
-    const [isLiked, setIsLiked] = useState(0);
-    const [isFollowing, setIsFollowing] = useState(0);
+
+    async function toggleLikes()
+    {
+        var newLikedState = await isQuizLiked();
+        if(newLikedState)
+        {
+            await unLikeQuiz();
+            document.getElementById("like-button-to-toggle").src = require("../img/addlikeempty.png");
+        }
+        else
+        {
+            await likeQuiz();
+            document.getElementById("like-button-to-toggle").src = require("../img/addlikefull.png");
+        }   
+    }
+
+    async function isUserFollowing()
+    {
+        var isUserFollowing = 0;
+        var quizID = localStorage.getItem('quizID');
+        var data = JSON.parse(quizID);
+        var obj = {SetId:data};
+        var js = JSON.stringify(obj);
+        
+        var user = localStorage.getItem('user');
+        var userdata = JSON.parse(user);
+        var userobj = userdata.UserId;
+        var idRes;
+        try{
+            const response = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await response.text());
+            data = res.Creator;
+            obj = {UserId:data};
+            js = JSON.stringify(obj);
+            try {
+                const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+                idRes = JSON.parse(await idResponse.text());
+            }
+    
+            catch(e) {
+                return;
+            }
+
+
+            for (let i = 0; i < idRes.Followers; i++)
+            {   
+                if (idRes[i].Followers === userobj)
+                {
+                    isUserFollowing = 1;
+                    break;
+                }
+            }
+        }
+        catch(e){
+            console.log("error");
+            return;
+        }
+
+        console.log("isUserFollowing: " + isUserFollowing);
+        return isUserFollowing;
+    }
+
+
+    async function followUser(){
+        var quizId = localStorage.getItem('quizID');
+        var data = JSON.parse(quizId);
+        console.log("quizId: " + quizId + " data: " + data);
+        var obj = {SetId:data};
+        var js = JSON.stringify(obj);
+        var quizCreator;
+
+        try {
+            const infosetResponse = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var infores = JSON.parse(await infosetResponse.text());
+            quizCreator = infores.Creator;
+        }
+
+        catch(e) {
+            return;
+        }
+
+        var userInfo = infores.Creator;
+        console.log(userInfo);
+        var blah = userInfo;
+        try{
+            const response = await fetch(buildPath('api/follow'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
+            var res = JSON.parse(await response.text());
+        }
+        catch(e){
+            return;
+        }
+    }
+
+    async function unFollowUser(){
+        var quizId = localStorage.getItem('quizID');
+        var data = JSON.parse(quizId);
+        var obj = {SetId:data};
+        var js = JSON.stringify(obj);
+        var quizCreator;
+
+        try {
+            const infosetResponse = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var infores = JSON.parse(await infosetResponse.text());
+            quizCreator = infores.Creator;
+        }
+
+        catch(e) {
+            return;
+        }
+
+        var userInfo = infores.Creator;
+        var blah = JSON.parse(userInfo);
+        try{
+            const response = await fetch(buildPath('api/unfollow'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
+            var res = JSON.parse(await response.text());
+        }
+        catch(e){
+            return;
+        }
+    }
+
+    async function toggleFollowing()
+    {
+        var newFollowingState = await isUserFollowing();
+        if (newFollowingState)
+        {
+            await unFollowUser();
+            document.getElementById("follow-button-to-toggle").src = require("../img/adduserempty.png");
+        }
+        else
+        {
+            await followUser();
+            document.getElementById("follow-button-to-toggle").src = require("../img/adduserfull.png");
+        }
+    }
 
     return (
         <div>
@@ -235,9 +393,9 @@ const ViewUserQuizPage = () =>
                             <button id="right-btn" class="carousel-btn" onClick={moveRight}><i class="arrow"></i></button>
                         </div>
                         <div className="buttons-div">
-                            <a className="view-user-quiz-buttons" onClick={() => {setIsLiked(1-isLiked); isLiked ? likeQuiz() : unLikeQuiz()}}><img className="clickable-icon view-user-like-icon" src={isLiked ? require("../img/addlikefull.png") : require("../img/addlikeempty.png")} /></a>
+                            <a className="view-user-quiz-buttons" onClick={toggleLikes}><img className="clickable-icon view-user-like-icon" id="like-button-to-toggle" src={""} /></a>
                             {/* <a className="view-user-quiz-buttons" onClick={loadQuiz}><img className="clickable-icon view-user-quiz-icon" src={require("../img/flip.png")} /></a> */}
-                            <a className="view-user-quiz-buttons" onClick={()=> {setIsFollowing(1-isFollowing)}}><img className="clickable-icon view-user-follow-icon" src={isFollowing ? require("../img/adduserfull.png") : require("../img/adduserempty.png")} /></a>
+                            <a className="view-user-quiz-buttons" onClick={toggleFollowing}><img className="clickable-icon view-user-follow-icon" id="follow-button-to-toggle" src={""} /></a>
                         </div>
                         
                     </div>
