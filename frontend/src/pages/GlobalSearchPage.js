@@ -24,7 +24,6 @@ const GlobalSearchPage = () =>
         var js = JSON.stringify(obj);
         const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
         var res = JSON.parse(await response.text());
-        var quizNames = res;
 
         var newQuizzesState = [];
 
@@ -37,7 +36,7 @@ const GlobalSearchPage = () =>
             try {
                 const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
                 var idRes = JSON.parse(await idResponse.text());
-                newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username});
+                newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username, Id:res[i]._id, userID:idRes._id});
             }
 
             catch(e) {
@@ -54,7 +53,6 @@ const GlobalSearchPage = () =>
         var js = JSON.stringify(obj);
         const response = await fetch(buildPath('api/searchsetglobaldate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}}); 
         var res = JSON.parse(await response.text());
-        var quizNames = res;
 
         var newQuizzesState = [];
 
@@ -67,7 +65,7 @@ const GlobalSearchPage = () =>
             try {
                 const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
                 var idRes = JSON.parse(await idResponse.text());
-                newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username});
+                newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username, Id:res[i]._id, userID:idRes._id});
             }
 
             catch(e) {
@@ -103,7 +101,16 @@ const GlobalSearchPage = () =>
     const [searchQuizzesFollowing, setSearchQuizzesFollowing] = useState(0);
     const [searchUsersFollowing, setSearchUsersFollowing] = useState(0);
 
+    const cardSaver = async(name) => {
+        localStorage.setItem('quizID',JSON.stringify(name));
+        window.location.href = "/viewglobalquiz";
+    }
+    const userCardSaver = async(name) => {
+        localStorage.setItem('quizCreator',JSON.stringify(name));
+        window.location.href = "/viewuser";
 
+    }
+    
     var [quizzes, setQuizzes] = useState([]);
     
     var quizNumber = -1;
@@ -117,8 +124,8 @@ const GlobalSearchPage = () =>
         return (
             <tr className="userQuizRow" key={index}>
                 <div className="userQuiz">
-                    <button className="userquizButton" onClick={viewQuiz}>{quiz.Name}</button><br />
-                    <button className="quizcreatorButton" id="quizUser" onClick={viewUser}>Created by: {quiz.Creator}</button>
+                    <button className="userquizButton" onClick={()=>cardSaver(quiz.Id)}>{quiz.Name}</button><br />
+                    <button className="quizcreatorButton" id="quizUser" onClick={()=>userCardSaver(quiz.userID)}>Created by: {quiz.Creator}</button>
                 </div>
             </tr>
         )

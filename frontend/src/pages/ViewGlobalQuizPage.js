@@ -52,7 +52,9 @@ const ViewUserQuizPage = () =>
     window.onload = function(){loadQuiz()};
 
     async function loadQuiz()
-    {   var quizID = localStorage.getItem('quizID');
+    {   
+        var quizID = localStorage.getItem('quizID');
+        console.log(quizID)
         var data = JSON.parse(quizID);
         var obj = {SetId:data};
         var js = JSON.stringify(obj);

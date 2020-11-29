@@ -6,13 +6,45 @@ import HelpViewQuiz from '../components/HelpViewQuiz';
 
 const MyQuizzesPage = () =>
 {
-    // const viewQuiz = async event => {
-    //     event.preventDefault();
+    const appName = 'athena18'
+    function buildPath(route) 
+    {
+        if (process.env.NODE_ENV === 'production') {
+            return 'https://' + appName + '.herokuapp.com/' + route;
+        }
+        else {
+            return 'http://localhost:5000/' + route;
+        }
+    }
+    var find = "";
+    const search = async event => {
+        event.preventDefault();
+        var userInfo = localStorage.getItem('quizCreator');
+        var data = JSON.parse(userInfo);
+        var obj = {UserId:data, Search:find.value};
+        var js = JSON.stringify(obj);
+        const response = await fetch(buildPath('api/searchsetuserdate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        var res = JSON.parse(await response.text());
+        setQuizzes(res);
+    }
 
-    //     window.location.href="./ViewQuiz";
-    // };
+    async function firstSearch(){
+        var userInfo = localStorage.getItem('quizCreator');
+        var data = JSON.parse(userInfo);
+        var obj = {UserId:data, Search:find.value};
+        var js = JSON.stringify(obj);
+        const response = await fetch(buildPath('api/searchsetuserdate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        var res = JSON.parse(await response.text());
+        setQuizzes(res);
+        var newobj = {UserId:data};
+        js = JSON.stringify(obj);
+        const response2 = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+        var res2 = JSON.parse(await response2.text());
+        document.getElementById('creatorName').innerHTML = res2.Username;
+        
+    }
 
-    // delete later and use above
+    window.onload = function(){firstSearch()};
     const viewQuiz = async event => {
         event.preventDefault();
 
@@ -52,7 +84,7 @@ const MyQuizzesPage = () =>
         return (
             <tr className="myQuizRow" key={index}>
                 <div className="myQuiz">
-                    <button className="quizButton" onClick={viewQuiz}>{quiz.title}</button>
+                    <button className="quizButton" onClick={viewQuiz}>{quiz.Name}</button>
                 </div>
             </tr>
         )
@@ -65,7 +97,7 @@ const MyQuizzesPage = () =>
                     <div className="col-3 column1 vh-100">
 
                         <form className="search-bar-form">
-                            <input type="text" className="search-bar" placeholder="Search Quiz By Title"/>
+                            <input type="text" className="search-bar" onKeyUp={search} placeholder="Search Quiz By Title" ref={(c) => find = c}/>
                             <a className="search-button" ><img className="clickable-icon search-icon" alt="Search" src={require("../img/search.png")}/></a>
                         </form>
 
@@ -95,7 +127,7 @@ const MyQuizzesPage = () =>
 
                     <div className="col-6 column2 vh-100">
                         <div className="global-quiz-title-div">
-                            <h3 className="global-quiz-title">Quiz Title</h3>
+                            <h3 className="global-quiz-title"id="creatorName">Quiz Title</h3>
                         </div>
 
                         <div className="view-user-quizzes">
