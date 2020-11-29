@@ -159,13 +159,13 @@ const GlobalSearchPage = () =>
     //LIKEDSEARCH
     async function likedSearch(){
         var userInfo = localStorage.getItem('user');
-        var data = JSON.parse(user);
+        var data = JSON.parse(userInfo);
         var obj = {UserId:data._id, Search:find.value};
         var js = JSON.stringify(obj);
         try{
             const response = await fetch(buildPath('api/searchsetlikedate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
-
+            
         }
         catch(e){
             return;
