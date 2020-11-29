@@ -640,6 +640,27 @@ router.post('/searchsetlikedalpha', async (req, res) => {
     }).sort({ Name: 'ascending' });
 })
 
+// Search liked by date
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list from user's liked sets
+*/
+router.post('/searchsetlikeddate', async (req, res) => {
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.json(result);
+        }
+    }).sort({ CreatedAt: 'descending' });
+})
+
 // Search all users existing sorted by date
 /*
     Incoming:
