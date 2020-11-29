@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import './ViewGlobalQuizPage.css';
 import HelpViewGlobalQuiz from '../components/HelpViewGlobalQuiz';
 
-const ViewUserQuizPage = () =>
+const ViewGlobalQuizPage = () =>
 { 
     const appName = 'athena18'
     function buildPath(route) 
@@ -54,9 +54,7 @@ const ViewUserQuizPage = () =>
     window.onload = function(){loadQuiz()};
 
     async function loadQuiz()
-    {   
-        var quizID = localStorage.getItem('quizID');
-        console.log(quizID)
+    {   var quizID = localStorage.getItem('quizID');
         var data = JSON.parse(quizID);
         var obj = {SetId:data};
         var js = JSON.stringify(obj);
@@ -143,7 +141,6 @@ const ViewUserQuizPage = () =>
         window.location = "./ViewUser";
     }
 
-<<<<<<< HEAD
     async function isQuizLiked()
     {
         var isQuizLiked = 0;
@@ -193,8 +190,6 @@ const ViewUserQuizPage = () =>
         }
     }
 
-=======
->>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
     async function likeQuiz(){
         var quizId = localStorage.getItem('quizID');
         var data = JSON.parse(quizId);
@@ -206,16 +201,7 @@ const ViewUserQuizPage = () =>
         try{
             const response = await fetch(buildPath('api/like'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
             var res = JSON.parse(await response.text());
-<<<<<<< HEAD
             updateLikes();
-=======
-            if(res.error){
-
-            }
-            else{
-                setIsLiked(res);
-            }
->>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
         }
         catch(e){
             return;
@@ -232,7 +218,6 @@ const ViewUserQuizPage = () =>
         try{
             const response = await fetch(buildPath('api/unlike'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
             var res = JSON.parse(await response.text());
-<<<<<<< HEAD
             updateLikes();
         }
         catch(e){
@@ -354,20 +339,11 @@ const ViewUserQuizPage = () =>
         try{
             const response = await fetch(buildPath('api/unfollow'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
             var res = JSON.parse(await response.text());
-=======
-            if(res.error){
-
-            }
-            else{
-                setIsLiked(res);
-            }
->>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
         }
         catch(e){
             return;
         }
     }
-<<<<<<< HEAD
 
     async function toggleFollowing()
     {
@@ -383,10 +359,6 @@ const ViewUserQuizPage = () =>
             document.getElementById("follow-button-to-toggle").src = require("../img/adduserfull.png");
         }
     }
-=======
-    const [isLiked, setIsLiked] = useState(0);
-    const [isFollowing, setIsFollowing] = useState(0);
->>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
 
     return (
         <div>
@@ -421,11 +393,7 @@ const ViewUserQuizPage = () =>
                             <button id="right-btn" class="carousel-btn" onClick={moveRight}><i class="arrow"></i></button>
                         </div>
                         <div className="buttons-div">
-<<<<<<< HEAD
                             <a className="view-user-quiz-buttons" onClick={toggleLikes}><img className="clickable-icon view-user-like-icon" id="like-button-to-toggle" src={""} /></a>
-=======
-                            <a className="view-user-quiz-buttons" onClick={() => {setIsLiked(1-isLiked); isLiked ? likeQuiz() : unLikeQuiz()}}><img className="clickable-icon view-user-like-icon" src={isLiked ? require("../img/addlikefull.png") : require("../img/addlikeempty.png")} /></a>
->>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
                             {/* <a className="view-user-quiz-buttons" onClick={loadQuiz}><img className="clickable-icon view-user-quiz-icon" src={require("../img/flip.png")} /></a> */}
                             <a className="view-user-quiz-buttons" onClick={toggleFollowing}><img className="clickable-icon view-user-follow-icon" id="follow-button-to-toggle" src={""} /></a>
                         </div>
@@ -443,4 +411,4 @@ const ViewUserQuizPage = () =>
     );
 };
 
-export default ViewUserQuizPage;
+export default ViewGlobalQuizPage;
