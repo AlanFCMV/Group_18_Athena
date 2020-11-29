@@ -598,6 +598,76 @@ router.post('/searchsetuseralpha', async (req, res) => {
     }).sort({ Name: 'ascending' });
 })
 
+// Search set of user following
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list from user's following sets
+*/
+router.post('/searchsetfollowingdate', async (req, res) => {
+    User.findOne({ "_id": req.body.UserId }, async (err, user) => {
+
+        CardSet.find({ "Creator": { $in: user.Following }, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                res.json(result);
+            }
+        }).sort({ CreatedAt: 'descending' });
+    });
+});
+
+// Search set of user following
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list from user's following sets
+*/
+router.post('/searchsetfollowingandlikeddate', async (req, res) => {
+    User.findOne({ "_id": req.body.UserId }, async (err, user) => {
+
+    
+        CardSet.find({ "Creator": { $in: user.Following }, "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                res.json(result);
+            }
+        }).sort({ CreatedAt: 'descending' });
+    });
+});
+
+// Search liked by a user
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date list from user's liked sets
+*/
+router.post('/searchsetlikeddate', async (req, res) => {
+    CardSet.find({ "LikedBy": req.body.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.json(result);
+        }
+    }).sort({ CreatedAt: 'descending' });
+})
+
 // Search liked by a user
 /*
     Incoming:
