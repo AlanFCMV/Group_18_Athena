@@ -472,8 +472,10 @@ router.post('/follow', authenticateToken, async (req, res, next) => {
     }
     Process of updating unfollow: user, unfollower
 */
-router.post('/unfollow', async (req, res, next) => {
+router.post('/unfollow',  authenticateToken, async (req, res, next) => {
     let error = '';
+
+    console.log(req.body + " " + req.user)
 
     User.findById(req.body.UserId, async (err, user) => {
         if (!user) {

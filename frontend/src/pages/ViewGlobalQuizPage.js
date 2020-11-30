@@ -46,8 +46,6 @@ const ViewGlobalQuizPage = () =>
 
     var questionOrAnswer = 0;
     const [cards, setCards] = useStateWithPromise([]); 
-    
-    const [isFollowing, setIsFollowing] = useState(0);
     var position = 0;
     var p;
 
@@ -102,16 +100,20 @@ const ViewGlobalQuizPage = () =>
         }
 
         var initialFollowState = await isUserFollowing();
-        if(initialFollowState)
+        if(initialFollowState === 1)
         {
             console.log("initializing follow button to be full");
             document.getElementById("follow-button-to-toggle").src = require("../img/adduserfull.png");
         }
-        else
+        else if (initialFollowState === 0)
         {
             console.log("initializing follow button to be empty");
             document.getElementById("follow-button-to-toggle").src = require("../img/adduserempty.png");
-        }   
+        }
+        else
+        {
+            document.getElementById("quiz-user").innerHTML = "You (" + document.getElementById("quiz-user").innerHTML + ")";
+        }
     }
 
     const moveRight = () => {
@@ -258,19 +260,21 @@ const ViewGlobalQuizPage = () =>
             data = res.Creator;
             obj = {UserId:data};
             js = JSON.stringify(obj);
-            try {
-                const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
-                idRes = JSON.parse(await idResponse.text());
-            }
-    
-            catch(e) {
-                return;
-            }
+            console.log("js: " + js);
 
-
-            for (let i = 0; i < idRes.Followers; i++)
+            if (data === userobj)
+            {
+                return -1; // Creator and User are the same
+            }
+            
+            const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            idRes = JSON.parse(await idResponse.text());
+            
+            console.log("idRes: " + idRes)
+            console.log("idRes.Followers: " + idRes.Followers)
+            for (let i = 0; i < idRes.Followers.length; i++)
             {   
-                if (idRes[i].Followers === userobj)
+                if (idRes.Followers[i] === userobj)
                 {
                     isUserFollowing = 1;
                     break;
@@ -278,7 +282,7 @@ const ViewGlobalQuizPage = () =>
             }
         }
         catch(e){
-            console.log("error");
+            console.log(e);
             return;
         }
 
@@ -306,8 +310,11 @@ const ViewGlobalQuizPage = () =>
         }
 
         var userInfo = infores.Creator;
-        console.log(userInfo);
-        var blah = userInfo;
+        obj = {UserId: userInfo};
+        js = JSON.stringify(obj);
+
+        var userInfo = localStorage.getItem('user');
+        var blah = JSON.parse(userInfo);
         try{
             const response = await fetch(buildPath('api/follow'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
             var res = JSON.parse(await response.text());
@@ -317,7 +324,7 @@ const ViewGlobalQuizPage = () =>
         }
     }
 
-    async function unFollowUser(){
+    async function unFollowUser() {
         var quizId = localStorage.getItem('quizID');
         var data = JSON.parse(quizId);
         var obj = {SetId:data};
@@ -325,22 +332,31 @@ const ViewGlobalQuizPage = () =>
         var quizCreator;
 
         try {
+            console.log("in 1st try")
             const infosetResponse = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
             var infores = JSON.parse(await infosetResponse.text());
             quizCreator = infores.Creator;
         }
 
         catch(e) {
+            console.log("e: " + e + " catch 1")
             return;
         }
 
         var userInfo = infores.Creator;
+        obj = {UserId: userInfo};
+        js = JSON.stringify(obj);
+
+        var userInfo = localStorage.getItem('user');
         var blah = JSON.parse(userInfo);
         try{
+            console.log("in 2nd try")
             const response = await fetch(buildPath('api/unfollow'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
             var res = JSON.parse(await response.text());
+            console.log("res :" + res)
         }
         catch(e){
+            console.log("e: " + e + " catch 2")
             return;
         }
     }
@@ -348,8 +364,10 @@ const ViewGlobalQuizPage = () =>
     async function toggleFollowing()
     {
         var newFollowingState = await isUserFollowing();
+        console.log("newFollowingState: " + newFollowingState)
         if (newFollowingState)
         {
+            console.log("Getting ready to unfollow user");
             await unFollowUser();
             document.getElementById("follow-button-to-toggle").src = require("../img/adduserempty.png");
         }
