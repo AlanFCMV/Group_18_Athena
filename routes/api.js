@@ -773,6 +773,26 @@ router.post('/searchuserglobalfollowers', async (req, res) => {
     }).sort({ Followers: -1 });
 })
 
+// Search all users existing sorted by alpha
+/*
+    Incoming:
+    {
+        Search: String
+    }
+    Outgoing:
+        sorted-by-popularity list of valid results
+*/
+router.post('/searchuserglobalalpha', async (req, res) => {
+    User.find({ "Username": new RegExp(req.body.Search, 'i') }, (err, result) => {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.json(result);
+        }
+    }).sort({ Username: 'ascending' });
+})
+
 // Search the user's followers existing sorted by # of followers they have
 /*
     Incoming:
