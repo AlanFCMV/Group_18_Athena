@@ -1,23 +1,24 @@
 .follow-user-button-div
 {
-    margin-top: 30px;
+    margin-top: 15px;
 }
 
 .follow-user-button
 {
-    display: block;
-    text-align: center;
+    position: relative;
+    bottom: 60px;
+    left: 80%;
 }
 
 .follow-user-icon
 {
-    width: 80px;
+    width: 60px;
 }
 
 .view-user-quizzes
 {
-    margin-top: 10px;
-    height: 86%;
+    margin-top: 85px;
+    height: 85%;
     overflow: auto;
 }
 
@@ -30,9 +31,28 @@
     display: none;
 }
 
-.global-quiz-title-div
+.global-quiz-creator-div
 {
-    margin-top: 85px;
+    margin-top: 10px;
     text-align: center;
     border: solid 1px #D99512;
+    width: 75%;
+}
+
+.global-user-follower-count-div
+{
+    margin-top: -54px;
+    border: solid 1px #D99512;
+    text-align: center;
+}
+
+.invisisble
+{
+    opacity: 0;
+    width: 64px;
+}
+
+.longer-creatorName
+{
+    width: 100%;
 }

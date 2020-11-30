@@ -138,8 +138,21 @@ const ViewGlobalQuizPage = () =>
         position--;
     }
 
-    const goToUsersPage = () =>
-    {
+    
+    const goToUsersPage = async() => {
+        var quizID = localStorage.getItem('quizID');
+        var data = JSON.parse(quizID);
+        var obj = {SetId:data};
+        var js = JSON.stringify(obj);
+        try{
+            const response = await fetch(buildPath('api/infoset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await response.text());
+        }
+        catch(e){
+            console.log("error");
+            return;
+        }
+        localStorage.setItem('quizCreator',JSON.stringify(res.Creator));
         window.location = "./ViewUser";
     }
 
