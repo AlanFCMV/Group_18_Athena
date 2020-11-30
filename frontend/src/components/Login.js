@@ -88,11 +88,6 @@ function Login() {
                 <span class="password-icon">{ToggleIcon}</span>
               </div>
              
-              <div class="checkbox-class">
-                  <input type="checkbox" id="remember" /> Remember Me
-              </div>
-              
-
               <button class="btn" id="login" type="button" onClick={doLogin}><i class="fa fa-sign-in-alt"></i> Log In </button>
 
             </form>
