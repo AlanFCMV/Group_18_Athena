@@ -66,6 +66,12 @@
     margin-top: 10px;
     margin-right: 1.75%;
     resize: none;
+    overflow: auto;
+}
+
+.short-inputs::-webkit-scrollbar
+{
+    display: none;
 }
 
 .save-quiz-form
