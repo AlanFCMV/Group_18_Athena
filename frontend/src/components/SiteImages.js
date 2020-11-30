@@ -18,15 +18,18 @@ function SiteImages() {
   function loadImages()
   {
     img.src = pictures[position];
+    console.log(position);
   }
 
   const moveRight = () => {
       if (position >= pictures.length - 1) {
           position = 0;
           img.src = pictures[position];
+          console.log(position);
           return;
       }
       img.src = pictures[position];
+      console.log(position);
       position++;
   }
 
@@ -34,9 +37,11 @@ function SiteImages() {
       if (position < 1) {
           position = pictures.length - 1;
           img.src = pictures[position];
+          console.log(position);
           return;
       }
       img.src = pictures[position];
+      console.log(position);
       position--;
   }
 
