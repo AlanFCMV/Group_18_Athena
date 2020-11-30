@@ -110,3 +110,7 @@
 .questions-answers::-webkit-scrollbar {
     display: none;
   }
+.errorMessage{
+    margin-left: 30%;
+}
+  

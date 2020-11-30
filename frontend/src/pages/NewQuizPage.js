@@ -21,33 +21,33 @@ const NewQuizPage = () =>
 
   const doAddSet = async event =>{
       event.preventDefault();
-
-      updateCards();
-
-      var obj = {Name:name.value, Cards:cards};
-      var js = JSON.stringify(obj);
-
-        var userInfo = localStorage.getItem('user');
-        var data= JSON.parse(userInfo);
-        console.log(data.accessToken)
-        var auth = data.accessToken;        
+   
+        updateCards();
+        if(name.value){
+      
+          var obj = {Name:name.value, Cards:cards};
+          var js = JSON.stringify(obj);
+    
+          var userInfo = localStorage.getItem('user');
+          var data= JSON.parse(userInfo);
+      
         
-        try{
+          try{
             const response = await fetch(buildPath('api/addset'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ data.accessToken)}});
             var res = JSON.parse(await response.text());
 
             if(res.error){
                 document.getElementById('addError').innerHTML = res.error;
             }
-            console.log("made it!");
-            
-
         }
         catch(e){
             return;
         }
 
         window.location.href="./MyQuizzes";
+      }
+      else
+        document.getElementById('addError').innerHTML = "Please enter a Quiz Title!"
   }
 
     const useStateWithPromise = (initialState) => {
@@ -176,7 +176,7 @@ const NewQuizPage = () =>
                         <Popup trigger={
                             <a className="help">
                                 <img className="help-icon" alt="Help" src={require("../img/help.png")}/>
-                                <p id='addError'></p>
+                                
                             </a>
                         } position="top right">
                             <HelpNewQuiz />
@@ -186,8 +186,8 @@ const NewQuizPage = () =>
                     <div className="col-6 column2 vh-100">
                         <form className="save-quiz-form">
                             <input type="text" className="long-inputs" id="quiz-title" placeholder="Quiz Title" ref={(c) => name = c}/>
-                            <a className="save-quiz" onClick={doAddSet}><img className="clickable-icon" alt="Save" src={require("../img/save.png")}/></a>
-
+                                <a className="save-quiz" onClick={doAddSet}><img className="clickable-icon" alt="Save" src={require("../img/save.png")}/></a>
+                                <p id='addError' className="errorMessage"></p>
                             <div className="questions-answers">
                                 <table className="add-edit-table">
                                     <tbody>
