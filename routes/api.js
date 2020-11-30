@@ -902,7 +902,6 @@ outgoing:
     returns set
 */
 router.post('/infoset', async (req, res, next) => {
-
     CardSet.findOne({ "_id": req.body.SetId }, async (err, cardset) => {
         return res.status(200).json(cardset);
     });
