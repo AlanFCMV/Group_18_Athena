@@ -497,7 +497,7 @@ const GlobalSearchPage = () =>
                         <div className="col-3 column1 vh-100">
 
                             <form className="search-bar-form">
-                                <input type="text" className="search-bar" onKeyUp={userFollowSearch} placeholder="Creator name" ref={(c) => find = c}/>
+                                <input type="text" className="search-bar" onKeyUp={userFollowSearch} placeholder="Search User By Name" ref={(c) => find = c}/>
                                 <a className="search-button" ><img className="clickable-icon search-icon" alt="Search" src={require("../img/search.png")}/></a>
                             </form>
 
