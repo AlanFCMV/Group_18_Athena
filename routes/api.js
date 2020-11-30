@@ -268,7 +268,6 @@ router.post('/reset', async (req, res, next) => {
 */
 router.post('/updatepassword', async (req, res, next) => {
     // Find a matching token
-    console.log(req.body);
     Token.findOne({ token: req.body.TokenId }, function (err, token) {
         if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
 
