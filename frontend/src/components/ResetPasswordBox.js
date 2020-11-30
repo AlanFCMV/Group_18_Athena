@@ -26,21 +26,16 @@ function ResetPasswordBox() {
         var js = JSON.stringify(obj);
         if(newPassword.value && samePassword.value){
             try{
-                const respone = await fetch(buildPath('api/updatepassword'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
-                var res = JSON.parse(await respone.text());
-            
-                if(newPassword.value != samePassword.value){
-                    document.getElementById('addError').innerHTML = "Passwords do not match, please try again";
-                }
-                else{
-                    
-                    var user={Password:res.Password};
+                if(newPassword.value === samePassword.value){
+                    const respone = await fetch(buildPath('api/updatepassword'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
+                    var user={Password:newPassword.value};
                     localStorage.setItem('user', JSON.stringify(user));
                     document.getElementById('addError').innerHTML = "The account password has been reset. Sending you back to Login.";
-                    setTimeout(function() {window.location.assign("http://athena18.herokuapp.com")},5000);
-                
+                    setTimeout(function() {window.location.assign("http://athena18.herokuapp.com")},3000);
                 }
-        
+                else{
+                    document.getElementById('addError').innerHTML = "Passwords do not match, please try again";
+                }
             }
             catch(e){
                 return;
@@ -63,7 +58,7 @@ function ResetPasswordBox() {
             <div class="modal-dialog text-center row">
                 <div class="col-md-8 pw-boxes">
                     <div class="modal-content">
-                        <form class="col-12" onSubmint={doConfirm}>
+                        <form class="col-12">
                             <div class="form-group passwordBox">
                                 <input type={PasswordInputType} id="newPassword" class="form-control" placeholder="Password" ref={(c) => newPassword = c} />
                                 <span class="password-iconReset">{ToggleIcon}</span>
