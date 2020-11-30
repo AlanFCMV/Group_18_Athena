@@ -122,36 +122,37 @@ const GlobalSearchPage = () =>
 
     window.onload = function(){firstSearch()};
 
-
-    // delete later and use above
-    const viewQuiz = async event => {
-        event.preventDefault();
-
-        alert("View this quiz!");
-    };
-
-    // delete later and use above
-    const viewUser = async event => {
-        event.preventDefault();
-
-        alert("View this user!");
-    };
-    
-
     // 0: View Quizzes
     // 1: View Users
     const [quizorusers, setQuizorusers] = useState(0);
 
     const [searchUsersFollowing, setSearchUsersFollowing] = useState(0);
 
-    const cardSaver = async(name) => {
-        localStorage.setItem('quizID',JSON.stringify(name));
-        window.location.href = "/viewglobalquiz";
-    }
-    const userCardSaver = async(name) => {
-        localStorage.setItem('quizCreator',JSON.stringify(name));
-        window.location.href = "/viewuser";
 
+    const cardSaver = async(quiz, Creator) => {
+        localStorage.setItem('quizID',JSON.stringify(quiz));
+        localStorage.setItem('quizCreator',JSON.stringify(Creator));
+        var myData = localStorage.getItem('user');
+        var isThisMine = JSON.parse(myData);
+        console.log(Creator)
+        console.log(isThisMine.UserId)
+        if(Creator === isThisMine.UserId){
+            window.location.href = "/ViewUserQuiz";
+        }
+        else
+            window.location.href = "/viewglobalquiz";
+    }
+
+    const userCardSaver = async(Creator) => {
+        localStorage.setItem('quizCreator',JSON.stringify(Creator));
+        var myData = localStorage.getItem('user');
+        var isThisMine = JSON.parse(myData);
+        
+        if(Creator === isThisMine.UserId){
+            window.location.href = "/MyQuizzes";
+        }
+        else
+            window.location.href = "/viewuser";
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -395,7 +396,7 @@ const GlobalSearchPage = () =>
         return (
             <tr className="userQuizRow" key={index}>
                 <div className="userQuiz">
-                    <button className="userquizButton" onClick={()=>cardSaver(quiz.Id)}>{quiz.Name}</button><br />
+                    <button className="userquizButton" onClick={()=>cardSaver(quiz.Id, quiz.userID)}>{quiz.Name}</button><br />
                     <button className="quizcreatorButton" id="quizUser" onClick={()=>userCardSaver(quiz.userID)}>Created by: {quiz.Creator}</button>
                 </div>
             </tr>
@@ -496,7 +497,7 @@ const GlobalSearchPage = () =>
                         <div className="col-3 column1 vh-100">
 
                             <form className="search-bar-form">
-                                <input type="text" className="search-bar" onKeyUp={searchFollowedUsers} placeholder="Creator name" ref={(c) => find = c}/>
+                                <input type="text" className="search-bar" onKeyUp={userFollowSearch} placeholder="Creator name" ref={(c) => find = c}/>
                                 <a className="search-button" ><img className="clickable-icon search-icon" alt="Search" src={require("../img/search.png")}/></a>
                             </form>
 

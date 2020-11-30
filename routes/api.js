@@ -649,6 +649,27 @@ router.post('/searchsetfollowingandlikeddate', async (req, res) => {
     });
 });
 
+// Search set of user liked by logged in user
+/*
+    Incoming:
+    {
+        UserId: ObjectId,
+        Search: String
+    }
+    Outgoing:
+        sorted-by-date sets from user liked by logged in user
+*/
+router.post('/searchsetuserlikeddate', authenticateToken, async (req, res) => {
+
+        CardSet.find({ "Creator": req.body.UserId, "LikedBy": req.user.UserId, "Name": new RegExp(req.body.Search, 'i') }, (err, result) => {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                res.json(result);
+            }
+        }).sort({ CreatedAt: 'descending' });
+});
 // Search liked by a user
 /*
     Incoming:

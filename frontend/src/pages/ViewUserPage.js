@@ -17,8 +17,7 @@ const MyQuizzesPage = () =>
         }
     }
     var find = "";
-    const search = async event => {
-        event.preventDefault();
+    async function search(){
         var userInfo = localStorage.getItem('quizCreator');
         var data = JSON.parse(userInfo);
         var obj = {UserId:data, Search:find.value};
@@ -175,7 +174,26 @@ const MyQuizzesPage = () =>
         }
         updateFollowers();
     }
-    
+    ///////////////////////////////////
+    //         SearchBylikes         //
+    ///////////////////////////////////
+    async function searchByLikes(){
+        var globalUserInfo = localStorage.getItem('quizCreator');
+        var data = JSON.parse(globalUserInfo);
+        var obj = {UserId: data, Search:find.value};
+        var js = JSON.stringify(obj);
+
+        var userInfo = localStorage.getItem('user');
+        var blah = JSON.parse(userInfo);
+        try{
+            const response = await fetch(buildPath('api/searchsetuserlikeddate'), {method:'POST', body:js,headers:{'Content-Type': 'application/json', 'authorization': ('BEARER '+ blah.accessToken)}});
+            var res = JSON.parse(await response.text());
+            setQuizzes(res);
+        }
+        catch(e){
+            return;
+        }
+    }
     async function toggleFollowing()
     {
         var newFollowingState = await isUserFollowing();
@@ -192,7 +210,35 @@ const MyQuizzesPage = () =>
             document.getElementById("follow-button-to-toggle").src = require("../img/adduserfull.png");
         }
     }
-
+    ///////////////////////////////////////////////////////////////
+    //                       togglelikedquizzes                  //
+    ///////////////////////////////////////////////////////////////
+    async function toggleLiked(){
+        var toggleL = document.getElementById("like-button-to-toggle").alt;
+        //setSearchQuizzesLiked(1-searchQuizzesLiked);
+ 
+        if(toggleL === "0"){
+             document.getElementById("like-button-to-toggle").alt = "1";
+             document.getElementById("like-button-to-toggle").src = require("../img/addlikefull.png");
+        }
+        else if(toggleL === "1"){
+             document.getElementById("like-button-to-toggle").alt = "0";
+             document.getElementById("like-button-to-toggle").src = require("../img/addlikeempty.png");
+        }
+        searchlikeduser();
+    }      
+    
+    ///////////////////////////////////////////////////////////////
+    //                       searchlikeduser                     //
+    ///////////////////////////////////////////////////////////////
+    async function searchlikeduser(){
+        var toggleL = document.getElementById("like-button-to-toggle").alt;
+        if(toggleL === "1"){
+            searchByLikes();
+        }
+        else
+            search();
+    }
     const renderQuizzes = (quiz, index) =>
     {
         return (
@@ -211,13 +257,13 @@ const MyQuizzesPage = () =>
                     <div className="col-3 column1 vh-100">
 
                         <form className="search-bar-form">
-                            <input type="text" className="search-bar" onKeyUp={search} placeholder="Search Quiz By Title" ref={(c) => find = c}/>
+                            <input type="text" className="search-bar" onKeyUp={searchlikeduser} placeholder="Search Quiz By Title" ref={(c) => find = c}/>
                             <a className="search-button" ><img className="clickable-icon search-icon" alt="Search" src={require("../img/search.png")}/></a>
                         </form>
 
                         <div className="search-filters-div">
                             <h3 className="search-filters"> Search Filter</h3>
-                            <a className="filter-like-button" onClick={() => setSearchQuizLiked(1 - searchQuizLiked)}><img className="clickable-icon filter-like-icon" alt="Search By Users You're Following" src={searchQuizLiked ? require("../img/addlikefull.png") : require("../img/addlikeempty.png")}/></a>
+                            <a className="filter-like-button" onClick={toggleLiked}><img className="clickable-icon filter-like-icon" alt="0"id="like-button-to-toggle" src={require("../img/addlikeempty.png")}/></a>
                         </div>
                         
                         <div className="global-quiz-creator-div" id="creatorNameDiv">
