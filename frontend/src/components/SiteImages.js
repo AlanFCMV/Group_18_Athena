@@ -3,7 +3,7 @@ import "./SiteImages.css";
 
 function SiteImages() {
  
-  var pictures = [require("../img/Menu.png"), require("../img/NewQuiz.png")];
+  var pictures = [require("../img/Menu.png"), require("../img/NewQuiz.png"), require("../img/MyQuizzes.png"), require("../img/GlobalSearch.png"), require("../img/ViewGlobalQuiz.png"), require("../img/ViewUserPage.png")];
   var position = 0;
   var img;
 
