@@ -272,7 +272,7 @@ const MyQuizzesPage = () =>
 
                         <div className="follow-user-button-div">
                             {/* This onClick function should also make an API call to add or remove the user from the following list */}
-                            <a className="follow-user-button" onClick={toggleFollowing}><img className="clickable-icon follow-user-icon" alt="Follow User" id="follow-button-to-toggle" src={""}/></a>
+                            <a className="follow-user-button" onClick={toggleFollowing}><img className="clickable-icon follow-user-icon" alt="" id="follow-button-to-toggle" src={""}/></a>
                         </div>
 
                         <div className="global-user-follower-count-div">
