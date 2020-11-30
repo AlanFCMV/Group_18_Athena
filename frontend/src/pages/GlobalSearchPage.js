@@ -38,10 +38,6 @@ const GlobalSearchPage = () =>
                 const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
                 var idRes = JSON.parse(await idResponse.text());
                 newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username, Id:res[i]._id, userID:idRes._id});
-<<<<<<< HEAD
-=======
-               
->>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
             }
 
             catch(e) {
@@ -114,10 +110,6 @@ const GlobalSearchPage = () =>
                 const idResponse = await fetch(buildPath('api/infouser'), {method:'POST', body:js,headers:{'Content-Type': 'application/json'}});
                 var idRes = JSON.parse(await idResponse.text());
                 newQuizzesState.push({Name:res[i].Name, Creator:idRes.Username, Id:res[i]._id, userID:idRes._id});
-<<<<<<< HEAD
-=======
-               
->>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
             }
 
             catch(e) {
@@ -160,14 +152,9 @@ const GlobalSearchPage = () =>
     const userCardSaver = async(name) => {
         localStorage.setItem('quizCreator',JSON.stringify(name));
         window.location.href = "/viewuser";
-<<<<<<< HEAD
 
     }
     
-=======
-
-    }
-    //LIKEDSEARCH
     async function likedSearch(){
         var userInfo = localStorage.getItem('user');
         var data = JSON.parse(userInfo);
@@ -183,7 +170,6 @@ const GlobalSearchPage = () =>
         }
 
     }
->>>>>>> fe6424c3406b4e318d9d009bf850e49b62aba015
     var [quizzes, setQuizzes] = useState([]);
     
     var quizNumber = -1;
